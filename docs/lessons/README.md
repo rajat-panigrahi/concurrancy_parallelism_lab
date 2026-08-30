@@ -15,10 +15,10 @@ the follow-up question an interviewer is likely to ask.
 | [04](04-pessimistic-concurrency.md) | Pessimistic concurrency | Nobody redoes work; the cost is waiting |
 | [05](05-choosing-between-them.md) | Choosing between them | The deciding variable is the conflict rate |
 | [06](06-deadlocks.md) | Deadlocks | Two correct operations, one cycle — fixed by ordering locks |
-| 07 | Parallelism (CPU-bound) | *M3* |
-| 08 | Async fan-out (I/O-bound) | *M3* |
+| [07](07-parallelism-cpu-bound.md) | Parallelism (CPU-bound) | How you aggregate matters more than whether you parallelise |
+| [08](08-async-io-bound.md) | Async fan-out (I/O-bound) | 2005ms to 204ms on the same cores — waiting overlapped |
 | 09 | Scaling | *M5* |
-| 10 | Benchmarking vs load testing | *M3* |
+| [10](10-benchmarking-vs-load-testing.md) | Benchmarking vs load testing | Benchmarking finds slow code; load testing finds slow systems |
 | 11 | Interview questions | *M5* |
 
 ## Suggested order

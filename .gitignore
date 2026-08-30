@@ -65,3 +65,4 @@ BenchmarkDotNet.Artifacts/
 node_modules/
 ui/**/dist/
 .angular/
+BenchmarkDotNet.Artifacts/

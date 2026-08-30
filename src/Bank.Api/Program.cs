@@ -1,6 +1,8 @@
 using Bank.Api.Features.Accounts.OpenAccount;
 using Bank.Api.Features.Lab;
 using Bank.Api.Features.Lab.StartRun;
+using Bank.Api.Features.Fraud.RunFraudChecks;
+using Bank.Api.Features.Interest.CalculateInterest;
 using Bank.Api.Features.Lab.Streaming;
 using Bank.Api.Features.Transfers.DeadlockTransfer;
 using Bank.Api.Features.Withdrawals.LockWithdraw;
@@ -65,6 +67,9 @@ builder.Services.AddSingleton<IWithdrawStrategy, OptimisticWithdrawHandler>();
 builder.Services.AddSingleton<IWithdrawStrategy, PessimisticWithdrawHandler>();
 
 builder.Services.AddSingleton<StartRunHandler>();
+builder.Services.AddSingleton<CalculateInterestHandler>();
+builder.Services.AddSingleton<FraudCheckService>();
+builder.Services.AddSingleton<RunFraudChecksHandler>();
 builder.Services.AddSingleton<DeadlockTransferHandler>();
 builder.Services.AddSingleton<DeadlockDemoHandler>();
 builder.Services.AddScoped<OpenAccountHandler>();
