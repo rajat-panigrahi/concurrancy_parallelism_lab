@@ -1,0 +1,39 @@
+<header class="topbar">
+  <div class="brand">
+    <span class="dot"></span>
+    <div>
+      <strong>Concurrency Lab</strong>
+      <small>who reads, who writes, who wins</small>
+    </div>
+  </div>
+
+  <nav>
+    @for (link of links; track link.path) {
+      <a [routerLink]="link.path"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: link.exact }">{{ link.label }}</a>
+    }
+  </nav>
+
+  <div class="status">
+    @if (online() === true) {
+      <span class="badge good">API up</span>
+      <span class="hint mono">{{ instanceId() }} · {{ cores() }} cores</span>
+    } @else if (online() === false) {
+      <span class="badge bad">API offline</span>
+    } @else {
+      <span class="badge mute">checking…</span>
+    }
+  </div>
+</header>
+
+@if (online() === false) {
+  <div class="offline card">
+    <strong>The API isn't running.</strong>
+    <p>Every page here calls it — the UI computes nothing itself. Start it with:</p>
+    <pre class="mono">dotnet run --project src/Bank.Api</pre>
+    <p class="hint">Expected at <code>http://localhost:5080</code>. PostgreSQL must be running too.</p>
+  </div>
+}
+
+<router-outlet />

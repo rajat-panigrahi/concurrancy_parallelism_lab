@@ -1,0 +1,14 @@
+.controls { margin: 1.25rem 0; align-items: center; }
+.error { border-color: rgba(255,92,122,.45); color: var(--bad); }
+section + section, .grid + section, section + .grid { margin-top: 1rem; }
+
+td.num.alarm { color: var(--bad); font-weight: 700; }
+.footnote { margin: 1rem 0 0; }
+
+.verdict-card header { display: flex; align-items: center; gap: .6rem; margin-bottom: .4rem; }
+.verdict-card h3 { margin: 0; color: var(--accent); }
+.verdict-card.bad { border-color: rgba(255,92,122,.4); }
+.verdict-card .summary { font-size: .86rem; margin-bottom: .6rem; }
+.verdict-card .statement { color: var(--text); font-size: .9rem; margin: 0; }
+
+.guide code { color: var(--accent); }

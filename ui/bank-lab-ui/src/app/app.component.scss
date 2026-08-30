@@ -1,0 +1,38 @@
+.topbar {
+  display: flex; align-items: center; gap: 1.5rem;
+  padding: .85rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(11, 15, 23, .82);
+  backdrop-filter: blur(10px);
+  position: sticky; top: 0; z-index: 20;
+  flex-wrap: wrap;
+}
+
+.brand { display: flex; align-items: center; gap: .65rem; }
+.brand strong { display: block; font-size: .96rem; letter-spacing: -.01em; }
+.brand small { display: block; color: var(--dim); font-size: .74rem; }
+
+.dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--good); box-shadow: 0 0 12px var(--good);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+nav { display: flex; gap: .25rem; flex-wrap: wrap; }
+nav a {
+  color: var(--muted); padding: .35rem .7rem; border-radius: 7px;
+  font-size: .88rem; text-decoration: none; transition: background .15s, color .15s;
+}
+nav a:hover { background: var(--surface-2); color: var(--text); text-decoration: none; }
+nav a.active { background: rgba(77,163,255,.14); color: var(--accent); }
+
+.status { margin-left: auto; display: flex; align-items: center; gap: .6rem; }
+
+.offline {
+  max-width: 1180px; margin: 1.5rem auto 0;
+  border-color: rgba(255,92,122,.4);
+}
+.offline pre {
+  background: #0d1420; border: 1px solid var(--border); border-radius: 8px;
+  padding: .6rem .8rem; overflow-x: auto; margin: .5rem 0;
+}

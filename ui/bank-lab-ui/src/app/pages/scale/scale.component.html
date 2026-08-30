@@ -1,0 +1,205 @@
+<div class="page">
+  <h1>Scale lab</h1>
+  <p class="lede">
+    “Can your app scale?” is <strong>three</strong> questions, and interviewers rarely say
+    which one they mean. Here they are, in the order that matters.
+  </p>
+
+  @if (error(); as message) {
+    <div class="card error rise">{{ message }}</div>
+  }
+
+  <!-- Layer 1 -->
+  <section class="card layer">
+    <header>
+      <span class="layer-no">1</span>
+      <div>
+        <h2>The application code</h2>
+        <p class="hint">Where most candidates lose the point. Scaling starts before any infrastructure exists.</p>
+      </div>
+    </header>
+
+    <p>
+      Two endpoints. Same work, same hardware, same 100 ms wait. The only difference is
+      whether the code <em>holds a thread</em> while waiting.
+    </p>
+
+    <div class="chart">
+      <h3 class="chart-title">Throughput — requests / second</h3>
+      @for (r of loadResults; track r.name; let i = $index) {
+        <div class="row rise" [style.animation-delay.ms]="i * 90">
+          <span class="row-label">{{ r.name }}</span>
+          <div class="bar-track">
+            <div class="bar" [class.good]="i === 0" [class.bad]="i === 1" [style.width.%]="rpsWidth(r.rps)"></div>
+          </div>
+          <span class="figure mono">{{ r.rps | number:'1.1-1' }}</span>
+        </div>
+      }
+
+      <h3 class="chart-title">p99 latency — lower is better</h3>
+      @for (r of loadResults; track r.name; let i = $index) {
+        <div class="row rise" [style.animation-delay.ms]="i * 90 + 180">
+          <span class="row-label">{{ r.name }}</span>
+          <div class="bar-track">
+            <div class="bar" [class.good]="i === 0" [class.bad]="i === 1" [style.width.%]="p99Width(r.p99)"></div>
+          </div>
+          <span class="figure mono">{{ r.p99 | number:'1.0-0' }}ms</span>
+        </div>
+      }
+    </div>
+
+    <div class="headline">
+      <strong>27.8× the throughput. 33.5× lower p99. Zero infrastructure changed.</strong>
+      <p class="hint">
+        <code>.Result</code> blocks a thread-pool thread for the whole wait. The pool starts
+        at about one thread per core and grows by only one or two per second, so 96 of 100
+        requests queue — not for the database, but for a thread to run on. You would need
+        ~28 instances to match what one instance gets by awaiting properly.
+      </p>
+      <p class="hint mono repro">dotnet run --project tests/Bank.LoadTests -c Release</p>
+    </div>
+  </section>
+
+  <!-- Layer 2 -->
+  <section class="card layer">
+    <header>
+      <span class="layer-no">2</span>
+      <div>
+        <h2>More instances (Docker / Kubernetes)</h2>
+        <p class="hint">Now the code is efficient, add machines — and find out what was secretly single-instance.</p>
+      </div>
+    </header>
+
+    <p class="mono repro">docker compose -f deploy/docker-compose.scale.yml up --build</p>
+
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Strategy</th><th>1 instance</th><th>3 instances</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">naive</td><td><span class="badge bad">broken</span></td><td><span class="badge bad">broken</span></td><td class="hint">no coordination anywhere</td></tr>
+          <tr class="highlight">
+            <td class="mono">lock</td>
+            <td><span class="badge good">correct</span></td>
+            <td><span class="badge bad">BREAKS</span></td>
+            <td class="hint">three replicas, three separate semaphores</td>
+          </tr>
+          <tr><td class="mono">optimistic</td><td><span class="badge good">correct</span></td><td><span class="badge good">correct</span></td><td class="hint">the token lives in Postgres</td></tr>
+          <tr><td class="mono">pessimistic</td><td><span class="badge good">correct</span></td><td><span class="badge good">correct</span></td><td class="hint">the row lock lives in Postgres</td></tr>
+          <tr><td class="mono">distributed-lock</td><td><span class="badge good">correct</span></td><td><span class="badge good">correct</span></td><td class="hint">the advisory lock lives in Postgres</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <blockquote>
+      Kubernetes multiplies instances. It doesn’t make un-scalable code scalable.
+      Horizontal scale works only if the code is stateless and coordinates through
+      <em>shared</em> state, not process memory.
+    </blockquote>
+
+    <p class="hint">
+      The <code>lock</code> row is the one to stare at. It was correct. It had a passing
+      test. It is now silently wrong, and <strong>not one line of it changed</strong>.
+    </p>
+  </section>
+
+  <!-- Layer 3 -->
+  <section class="card layer">
+    <header>
+      <span class="layer-no">3</span>
+      <div>
+        <h2>The data</h2>
+        <p class="hint">Once instances are cheap, the database is the wall — and the limit is usually contention, not CPU.</p>
+      </div>
+    </header>
+
+    <h3>Deadlocks: two correct operations that stop each other</h3>
+    <p>
+      Alice sends ₹50 to Bob while Bob sends ₹50 to Alice. Each locks its “from” account,
+      then waits for the other’s.
+    </p>
+    <div class="controls">
+      <button class="ghost" (click)="runDeadlock(false)" [disabled]="busyDeadlock()">Run without lock ordering</button>
+      <button (click)="runDeadlock(true)" [disabled]="busyDeadlock()">Run with lock ordering</button>
+    </div>
+
+    @if (deadlock(); as d) {
+      <div class="result rise" [class.bad]="d.deadlockDetected">
+        <div class="result-head">
+          @if (d.deadlockDetected) {
+            <span class="badge bad">deadlock detected (40P01)</span>
+          } @else {
+            <span class="badge good">no deadlock</span>
+          }
+          <span class="badge mute">money {{ d.totalMoneyBefore }} → {{ d.totalMoneyAfter }}</span>
+        </div>
+        @for (r of d.results; track r.actorId) {
+          <div class="transfer mono">
+            <span class="badge" [class.good]="r.succeeded" [class.bad]="r.deadlocked" [class.mute]="!r.succeeded && !r.deadlocked">
+              {{ r.actorId }}
+            </span>
+            <span class="hint">{{ r.reason }}</span>
+          </div>
+        }
+        <p class="statement">{{ d.verdict }}</p>
+      </div>
+    }
+
+    <h3 class="spaced">Retries: concurrency-safe is not the same as idempotent</h3>
+    <p>
+      At scale, retries are not hypothetical — timeouts, load-balancer retries,
+      double-clicks, at-least-once queues. Everything in the other lessons makes
+      <em>concurrent</em> operations safe. None of it makes a <em>repeated</em> one safe.
+    </p>
+    <div class="controls">
+      <button class="ghost" (click)="runIdempotency(false)" [disabled]="busyIdempotency()">Retry ×5 without a key</button>
+      <button (click)="runIdempotency(true)" [disabled]="busyIdempotency()">Retry ×5 with a key</button>
+    </div>
+
+    @if (idempotency(); as idem) {
+      <div class="result rise" [class.bad]="idem.finalBalance !== idem.expectedBalance">
+        <div class="result-head">
+          <span class="badge" [class.good]="idem.timesApplied === 1" [class.bad]="idem.timesApplied > 1">
+            applied {{ idem.timesApplied }}×
+          </span>
+          <span class="badge mute">balance {{ idem.finalBalance | number:'1.2-2' }} · expected {{ idem.expectedBalance | number:'1.2-2' }}</span>
+        </div>
+        <p class="statement">{{ idem.verdict }}</p>
+      </div>
+    }
+
+    <div class="fixes">
+      <h3>When the row is genuinely hot</h3>
+      <p class="hint">More instances don’t help — writes to one row serialise regardless. Make the row less hot instead:</p>
+      <ul>
+        <li><strong>Shard the counter</strong> — 10 rows summed on read instead of 1 row everyone contends on.</li>
+        <li><strong>Queue the writes</strong> — accept fast, apply serially; turn contention into latency you control.</li>
+        <li><strong>Event-source it</strong> — append immutable events; appends don’t conflict.</li>
+        <li><strong>Batch</strong> — 100 changes in one transaction, not 100 transactions.</li>
+        <li><strong>Read replicas</strong> — for read-heavy load. They do nothing for write contention.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card answer">
+    <h2>The 60-second answer</h2>
+    <blockquote class="long">
+      “It’s three questions. First, the code: async all the way down — one endpoint doing
+      <code>.Result</code> instead of <code>await</code> gets 35 requests per second where
+      the async one gets 979, same hardware, because blocking starves the thread pool. No
+      amount of infrastructure fixes that.
+      <br /><br />
+      Second, instances: scale out horizontally, but that only works if it’s stateless. I’ve
+      got a slice using an in-memory lock that’s provably correct on one instance and
+      silently wrong on three, with no code change.
+      <br /><br />
+      Third, data: at that point the database is the bottleneck, and usually it’s row
+      contention rather than CPU — shard the hot row, queue the writes, and you need
+      idempotency keys, because at that scale retries will duplicate operations.”
+    </blockquote>
+    <p class="closer">
+      Then the honest closer, which is what separates a senior answer:
+      <em>“But I’d want to know which of the three is actually the problem before touching
+      any of it. Most ‘we need to scale’ turns out to be one N+1 query.”</em>
+    </p>
+  </section>
+</div>

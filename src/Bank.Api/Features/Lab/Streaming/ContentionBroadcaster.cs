@@ -29,7 +29,7 @@ public sealed class ContentionBroadcaster(
             try
             {
                 await hub.Clients
-                    .Group(ContentionHub.GroupFor(contentionEvent.RunId))
+                    .Groups(ContentionHub.GroupFor(contentionEvent.RunId), ContentionHub.AllRunsGroup)
                     .SendAsync("contention", contentionEvent, stoppingToken);
             }
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)

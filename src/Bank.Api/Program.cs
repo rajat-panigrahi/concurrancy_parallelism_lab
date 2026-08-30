@@ -81,8 +81,16 @@ builder.Services.AddSingleton<IdempotencyDemoHandler>();
 builder.Services.AddScoped<OpenAccountHandler>();
 builder.Services.AddHostedService<ContentionBroadcaster>();
 
+// Both spellings of the dev host. `localhost` and `127.0.0.1` are DIFFERENT origins to
+// a browser, so allowing only one produces a CORS failure that looks like the API being
+// down. AllowCredentials is required for the SignalR websocket handshake, and it forbids
+// a wildcard origin — so the list has to be explicit.
 builder.Services.AddCors(options => options.AddPolicy("lab-ui", policy => policy
-    .WithOrigins("http://localhost:4200")
+    .WithOrigins(
+        "http://localhost:4200",
+        "http://127.0.0.1:4200",
+        "http://localhost:5080",
+        "http://127.0.0.1:5080")
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()));

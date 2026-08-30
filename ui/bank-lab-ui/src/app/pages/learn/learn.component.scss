@@ -1,0 +1,58 @@
+section { margin-top: 1.5rem; }
+
+.lessons { display: flex; flex-direction: column; gap: .35rem; margin-top: 1rem; }
+.lesson {
+  display: flex; align-items: center; gap: .9rem;
+  padding: .55rem .75rem; border: 1px solid var(--border); border-radius: 8px;
+  background: rgba(255,255,255,.015);
+  transition: border-color .15s ease, transform .15s ease;
+}
+.lesson:hover { border-color: rgba(77,163,255,.4); transform: translateX(2px); }
+.lesson .num { color: var(--accent); font-size: .9rem; font-weight: 700; min-width: 1.6rem; }
+.lesson .body { display: flex; flex-direction: column; flex: 1; line-height: 1.35; }
+.lesson .body strong { font-size: .92rem; }
+.lesson .file { color: var(--dim); font-size: .74rem; white-space: nowrap; }
+
+.cards-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
+.cards-head h2 { margin: 0; }
+.cards-head p { margin: .2rem 0 0; }
+.cards-head .controls { gap: .5rem; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(285px, 1fr)); gap: .75rem; margin-top: 1.25rem; }
+
+.flashcard {
+  background: none; border: 0; padding: 0; text-align: left; cursor: pointer;
+  perspective: 1200px; min-height: 168px; font: inherit; color: inherit;
+}
+.flashcard:hover { transform: none; box-shadow: none; }
+
+.inner {
+  position: relative; width: 100%; height: 100%; min-height: 168px;
+  transition: transform .55s cubic-bezier(.22,.8,.3,1);
+  transform-style: preserve-3d;
+}
+.flashcard.flipped .inner { transform: rotateY(180deg); }
+
+.face {
+  position: absolute; inset: 0;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1rem; display: flex; flex-direction: column; gap: .6rem;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
+  overflow: auto;
+}
+.front { justify-content: space-between; }
+.front .q { font-size: .96rem; font-weight: 600; color: var(--text); }
+.front .prompt { font-size: .72rem; }
+
+.back { transform: rotateY(180deg); border-color: rgba(77,163,255,.35); }
+.back .a { font-size: .86rem; color: var(--muted); line-height: 1.55; }
+.back .evidence {
+  font-size: .74rem; color: var(--good);
+  border-top: 1px solid var(--border); padding-top: .45rem; margin-top: auto;
+}
+
+.flashcard:focus-visible .face { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.asks { margin: .75rem 0 0; padding-left: 1.1rem; color: var(--muted); font-size: .9rem; }
+.asks li { margin-bottom: .35rem; }

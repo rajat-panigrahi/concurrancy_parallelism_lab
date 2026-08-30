@@ -70,7 +70,59 @@ Override the connection strings with `ConnectionStrings__BankDb` (app) and
 ```bash
 dotnet run --project src/Bank.Api      # http://localhost:5080, Swagger at /swagger
 dotnet test                            # the whole suite
+
+cd ui/bank-lab-ui && npm ci && npm start   # http://localhost:4200
 ```
+
+Open the UI and hit **Run** on the Race lab. Five people withdraw ₹100 from an account
+holding ₹100; all five are approved; the balance reads ₹0. The timeline shows where the
+other ₹400 went.
+
+### Try it without the UI
+
+```bash
+# the bug
+curl -X POST localhost:5080/api/lab/runs -H 'Content-Type: application/json' \
+  -d '{"strategy":"naive","actors":5,"amountEach":100,"startingBalance":100,"forceRace":true}'
+
+# the same input, fixed — swap naive for lock, optimistic, pessimistic or distributed-lock
+curl localhost:5080/api/lab/strategies
+
+# a real deadlock, then the one-line fix
+curl -X POST localhost:5080/api/lab/deadlock -H 'Content-Type: application/json' \
+  -d '{"orderLocks":false,"holdBetweenLocksMs":100}'
+
+# thread-pool starvation: 979 RPS vs 35 RPS on identical hardware
+dotnet run --project tests/Bank.LoadTests -c Release -- --seconds=10
+```
+
+## What it measures
+
+Every number below was produced by running this repo on a 4-core VM.
+
+| Question | Answer | Where |
+|---|---|---|
+| What does a lost update cost? | 5 approved, ₹400 unaccounted for, **4 silent losers** | Race lab |
+| Optimistic vs pessimistic? | 9 attempts / 4 conflicts / **0 ms waiting** vs 5 attempts / 0 conflicts / **244 ms waiting** | Compare |
+| Does parallelising help? | Per-item `lock`: **11× slower than one core**. Thread-local sums: **3.68× faster** | Parallelism lab |
+| What does `async` buy? | 10 × 200 ms calls: **2005 ms → 204 ms**, on 5 threads, 4 cores | Parallelism lab |
+| Is `Task.Run` async? | No — **1,857× slower** than just calling the method | `docs/benchmarks/` |
+| Can it scale? | One `.Result` instead of `await`: **979 → 35 RPS**, p99 105 ms → 3531 ms | Scale lab |
+| Are retries safe? | Without an idempotency key, 5 retries of one withdrawal charged **5×** | Scale lab |
+
+## The UI
+
+Angular 19, standalone components and signals. Deliberately dumb — it calls the API and
+animates what comes back; every verdict is computed server-side.
+
+| Page | What it does |
+|---|---|
+| **Mental model** | Animated one-teller vs four-tellers, running off one clock |
+| **Race lab** | Swimlane per actor, live over SignalR. Trophy on the winner, red strike on the silent losers, and a big expected-vs-actual verdict card |
+| **Compare** | Every strategy on identical input, side by side |
+| **Parallelism lab** | Six aggregation strategies, and sequential vs `Task.WhenAll` |
+| **Scale lab** | The three layers, with the load-test numbers and the deadlock/idempotency demos |
+| **Learn** | The lesson map plus flashcards for the night before |
 
 ## Repository layout
 
