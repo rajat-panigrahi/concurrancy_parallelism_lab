@@ -44,3 +44,26 @@ jobs:
 
       - name: Test
         run: dotnet test --no-build --configuration Release --verbosity normal
+
+  ui:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ui/bank-lab-ui
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ui/bank-lab-ui/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      # The UI holds no business logic, so there is nothing to unit test here — but it
+      # can still break the build, and a CI that never compiles it lets it rot.
+      - name: Build
+        run: npm run build
