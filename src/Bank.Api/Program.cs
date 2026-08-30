@@ -2,8 +2,11 @@ using Bank.Api.Features.Accounts.OpenAccount;
 using Bank.Api.Features.Lab;
 using Bank.Api.Features.Lab.StartRun;
 using Bank.Api.Features.Lab.Streaming;
+using Bank.Api.Features.Transfers.DeadlockTransfer;
 using Bank.Api.Features.Withdrawals.LockWithdraw;
 using Bank.Api.Features.Withdrawals.NaiveWithdraw;
+using Bank.Api.Features.Withdrawals.OptimisticWithdraw;
+using Bank.Api.Features.Withdrawals.PessimisticWithdraw;
 using Bank.Api.Shared.Contention;
 using Bank.Api.Shared.Endpoints;
 using Bank.Api.Shared.Interleaving;
@@ -23,8 +26,18 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<BankDbContext>(options =>
+// A factory, not just a scoped DbContext. DbContext is NOT thread-safe: it holds a
+// change tracker and a single connection, and issuing two concurrent operations on one
+// instance throws "A second operation was started on this context".
+//
+// The lab runs N actors at once against one account, so each actor needs its own
+// context — which is also what really happens in production, where each request gets
+// its own scope. Sharing one would replace the race we want with an EF exception.
+builder.Services.AddDbContextFactory<BankDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("BankDb")));
+
+builder.Services.AddScoped<BankDbContext>(sp =>
+    sp.GetRequiredService<IDbContextFactory<BankDbContext>>().CreateDbContext());
 
 builder.Services.AddSignalR();
 
@@ -48,8 +61,12 @@ builder.Services.AddSingleton<IAccountLock, InProcessAccountLock>();
 // Each concurrency lesson registers itself as a strategy the lab can run.
 builder.Services.AddSingleton<IWithdrawStrategy, NaiveWithdrawHandler>();
 builder.Services.AddSingleton<IWithdrawStrategy, LockWithdrawHandler>();
+builder.Services.AddSingleton<IWithdrawStrategy, OptimisticWithdrawHandler>();
+builder.Services.AddSingleton<IWithdrawStrategy, PessimisticWithdrawHandler>();
 
 builder.Services.AddSingleton<StartRunHandler>();
+builder.Services.AddSingleton<DeadlockTransferHandler>();
+builder.Services.AddSingleton<DeadlockDemoHandler>();
 builder.Services.AddScoped<OpenAccountHandler>();
 builder.Services.AddHostedService<ContentionBroadcaster>();
 

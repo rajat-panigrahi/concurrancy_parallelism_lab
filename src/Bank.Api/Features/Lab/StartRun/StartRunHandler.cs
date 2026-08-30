@@ -2,6 +2,7 @@ using Bank.Api.Shared.Contention;
 using Bank.Api.Shared.Interleaving;
 using Bank.Api.Shared.Persistence;
 using Bank.Api.Shared.Withdrawals;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Api.Features.Lab.StartRun;
 
@@ -17,6 +18,7 @@ namespace Bank.Api.Features.Lab.StartRun;
 public sealed class StartRunHandler(
     IEnumerable<IWithdrawStrategy> strategies,
     InMemoryAccountStore store,
+    IDbContextFactory<BankDbContext> dbContextFactory,
     ContentionRecorder recorder,
     LabInterleaveGate gate,
     LabRunStore runs)
@@ -41,7 +43,13 @@ public sealed class StartRunHandler(
         var actors = Math.Clamp(request.Actors, 1, 64);
         var runId = Guid.NewGuid();
 
-        var account = store.Reset(Guid.NewGuid(), $"LAB-{runId:N}"[..12], request.StartingBalance);
+        // Each run gets a brand new account so runs never interfere with each other,
+        // in whichever store the chosen strategy coordinates through.
+        var (accountId, startingVersion) = strategy.Storage switch
+        {
+            StorageKind.Postgres => await SeedPostgresAccountAsync(runId, request.StartingBalance, cancellationToken),
+            _ => SeedInMemoryAccount(runId, request.StartingBalance),
+        };
 
         recorder.BeginRun(runId);
 
@@ -51,7 +59,7 @@ public sealed class StartRunHandler(
         {
             RunId = runId,
             ActorId = $"actor-{i}",
-            AccountId = account.Id,
+            AccountId = accountId,
             Amount = request.AmountEach,
             ThinkTime = TimeSpan.FromMilliseconds(Math.Clamp(request.ThinkTimeMs, 0, 2000)),
         }).ToArray();
@@ -77,17 +85,22 @@ public sealed class StartRunHandler(
         }));
 
         var duration = recorder.ElapsedMs(runId) - started;
-        var final = store.Read(account.Id)!.Value;
+
+        var finalBalance = strategy.Storage switch
+        {
+            StorageKind.Postgres => await ReadPostgresBalanceAsync(accountId, cancellationToken),
+            _ => store.Read(accountId)!.Value.Balance,
+        };
 
         var summary = RunSummaryCalculator.Calculate(
             new RunFacts
             {
                 RunId = runId,
                 Strategy = strategy.Name,
-                AccountId = account.Id,
+                AccountId = accountId,
                 StartingBalance = request.StartingBalance,
-                StartingVersion = 1,
-                FinalBalance = final.Balance,
+                StartingVersion = startingVersion,
+                FinalBalance = finalBalance,
                 DurationMs = duration,
                 Approvals = results.ToDictionary(r => r.ActorId, r => r.Approved),
             },
@@ -101,5 +114,41 @@ public sealed class StartRunHandler(
             Summary = summary,
             Timeline = recorder.EventsFor(runId),
         };
+    }
+
+    private (Guid AccountId, long StartingVersion) SeedInMemoryAccount(Guid runId, decimal openingBalance)
+    {
+        var account = store.Reset(Guid.NewGuid(), $"LAB-{runId:N}"[..12], openingBalance);
+        return (account.Id, account.Version);
+    }
+
+    private async Task<(Guid AccountId, long StartingVersion)> SeedPostgresAccountAsync(
+        Guid runId,
+        decimal openingBalance,
+        CancellationToken cancellationToken)
+    {
+        await using var db = await dbContextFactory.CreateDbContextAsync(cancellationToken);
+
+        var account = new Account
+        {
+            Id = Guid.NewGuid(),
+            AccountNumber = $"LAB-{runId:N}"[..16],
+            Owner = "Lab run",
+            Balance = openingBalance,
+        };
+
+        db.Accounts.Add(account);
+        await db.SaveChangesAsync(cancellationToken);
+
+        // Postgres assigns xmin on INSERT, so the starting version is whatever
+        // transaction created the row — not a fixed number.
+        return (account.Id, (long)account.Version);
+    }
+
+    private async Task<decimal> ReadPostgresBalanceAsync(Guid accountId, CancellationToken cancellationToken)
+    {
+        await using var db = await dbContextFactory.CreateDbContextAsync(cancellationToken);
+        return await db.Accounts.AsNoTracking().Where(a => a.Id == accountId).Select(a => a.Balance)
+            .SingleAsync(cancellationToken);
     }
 }
