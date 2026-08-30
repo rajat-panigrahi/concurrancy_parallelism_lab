@@ -69,15 +69,18 @@ public sealed class InMemoryAccountStore
     /// Blind write. Whatever balance you hand in wins, regardless of what happened
     /// since you read. This is the lost update, in one method.
     /// </summary>
-    public void Write(Guid id, decimal newBalance)
+    /// <returns>The version this write produced, so a caller can record what it left behind.</returns>
+    public long Write(Guid id, decimal newBalance)
     {
         if (!_accounts.TryGetValue(id, out var account))
         {
             throw new KeyNotFoundException($"Account {id} not found.");
         }
 
+        // Not atomic, and deliberately so: the balance and the version are two
+        // separate stores, and the caller decided `newBalance` long before now.
         account.Balance = newBalance;
-        account.Version++;
+        return ++account.Version;
     }
 
     /// <summary>
@@ -85,7 +88,7 @@ public sealed class InMemoryAccountStore
     /// read <paramref name="expectedVersion"/>. This is optimistic concurrency
     /// implemented by hand, with no database involved.
     /// </summary>
-    public bool TryWrite(Guid id, decimal newBalance, long expectedVersion)
+    public bool TryWrite(Guid id, decimal newBalance, long expectedVersion, out long newVersion)
     {
         if (!_accounts.TryGetValue(id, out var account))
         {
@@ -98,11 +101,12 @@ public sealed class InMemoryAccountStore
         {
             if (account.Version != expectedVersion)
             {
+                newVersion = account.Version;
                 return false;
             }
 
             account.Balance = newBalance;
-            account.Version++;
+            newVersion = ++account.Version;
             return true;
         }
     }

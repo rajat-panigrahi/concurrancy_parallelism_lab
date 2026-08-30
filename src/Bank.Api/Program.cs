@@ -1,8 +1,24 @@
+using Bank.Api.Features.Accounts.OpenAccount;
+using Bank.Api.Features.Lab;
+using Bank.Api.Features.Lab.StartRun;
+using Bank.Api.Features.Lab.Streaming;
+using Bank.Api.Features.Withdrawals.LockWithdraw;
+using Bank.Api.Features.Withdrawals.NaiveWithdraw;
+using Bank.Api.Shared.Contention;
 using Bank.Api.Shared.Endpoints;
+using Bank.Api.Shared.Interleaving;
+using Bank.Api.Shared.Locking;
 using Bank.Api.Shared.Persistence;
+using Bank.Api.Shared.Withdrawals;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Enums as names, not numbers. A timeline that says "LostUpdate" teaches; one that
+// says 10 requires a lookup table, and the UI would have to hardcode it.
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -10,9 +26,32 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<BankDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("BankDb")));
 
+builder.Services.AddSignalR();
+
 // One store for the whole process. That is the point: the in-process slices share
 // mutable state, which is exactly what stops them scaling past one instance.
 builder.Services.AddSingleton<InMemoryAccountStore>();
+
+// Singletons because a run's timeline, its barriers and its locks must be the same
+// objects for every actor in that run. Registering any of these as scoped would give
+// each request its own copy and quietly delete the contention we are demonstrating.
+builder.Services.AddSingleton<ContentionRecorder>();
+builder.Services.AddSingleton<IContentionRecorder>(sp => sp.GetRequiredService<ContentionRecorder>());
+builder.Services.AddSingleton<LabInterleaveGate>();
+builder.Services.AddSingleton<IInterleaveGate>(sp => sp.GetRequiredService<LabInterleaveGate>());
+builder.Services.AddSingleton<LabRunStore>();
+
+// Swap this one registration for a Postgres advisory lock and the `lock` strategy
+// survives scale-out. One line is the difference. See ADR-0012.
+builder.Services.AddSingleton<IAccountLock, InProcessAccountLock>();
+
+// Each concurrency lesson registers itself as a strategy the lab can run.
+builder.Services.AddSingleton<IWithdrawStrategy, NaiveWithdrawHandler>();
+builder.Services.AddSingleton<IWithdrawStrategy, LockWithdrawHandler>();
+
+builder.Services.AddSingleton<StartRunHandler>();
+builder.Services.AddScoped<OpenAccountHandler>();
+builder.Services.AddHostedService<ContentionBroadcaster>();
 
 builder.Services.AddCors(options => options.AddPolicy("lab-ui", policy => policy
     .WithOrigins("http://localhost:4200")
@@ -41,6 +80,7 @@ app.MapGet("/api/health", () => Results.Ok(new
 .WithTags("Health");
 
 app.MapSliceEndpoints();
+app.MapHub<ContentionHub>("/hubs/contention");
 
 app.Run();
 
