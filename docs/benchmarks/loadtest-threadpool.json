@@ -1,0 +1,28 @@
+[
+  {
+    "Name": "async (proper await)",
+    "VirtualUsers": 100,
+    "Completed": 9800,
+    "Failed": 0,
+    "DurationSeconds": 10.01,
+    "RequestsPerSecond": 979,
+    "P50Ms": 101.9,
+    "P95Ms": 104.2,
+    "P99Ms": 105.4,
+    "MaxMs": 106.5,
+    "Note": "The thread is released while waiting, so 100 in-flight requests cost almost no threads."
+  },
+  {
+    "Name": "sync-over-async (.Result)",
+    "VirtualUsers": 100,
+    "Completed": 352,
+    "Failed": 0,
+    "DurationSeconds": 10,
+    "RequestsPerSecond": 35.2,
+    "P50Ms": 2760.2,
+    "P95Ms": 3530.4,
+    "P99Ms": 3530.7,
+    "MaxMs": 3530.8,
+    "Note": "Identical work, identical hardware. Each request blocks a thread-pool thread."
+  }
+]

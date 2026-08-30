@@ -17,9 +17,9 @@ the follow-up question an interviewer is likely to ask.
 | [06](06-deadlocks.md) | Deadlocks | Two correct operations, one cycle — fixed by ordering locks |
 | [07](07-parallelism-cpu-bound.md) | Parallelism (CPU-bound) | How you aggregate matters more than whether you parallelise |
 | [08](08-async-io-bound.md) | Async fan-out (I/O-bound) | 2005ms to 204ms on the same cores — waiting overlapped |
-| 09 | Scaling | *M5* |
+| [09](09-scaling.md) | Scaling | Three layers: code, instances, data — in that order |
 | [10](10-benchmarking-vs-load-testing.md) | Benchmarking vs load testing | Benchmarking finds slow code; load testing finds slow systems |
-| 11 | Interview questions | *M5* |
+| [11](11-interview-questions.md) | Interview questions | Every answer backed by something runnable here |
 
 ## Suggested order
 

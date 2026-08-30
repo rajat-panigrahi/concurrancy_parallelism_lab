@@ -64,6 +64,38 @@ the scheduler's mood, and it will fail eventually.
 - **Tier 3 needs a real database**, which means the suite has an external prerequisite
   (ADR-0015).
 
+## A flake we found and removed
+
+This ADR was tested against reality during M5. The unit suite briefly contained two
+tests asserting a *performance ratio* — "thread-local aggregation is more than twice as
+fast as locking per item". Both passed consistently, then one failed once during a full
+solution run while a Release API was also consuming CPU.
+
+Reproduced deliberately by running the suite with four busy loops saturating all four
+cores: `ThreadLocalAggregation_BeatsPerItemSynchronisation` failed reliably.
+
+The fix was not to widen the threshold. A wall-clock ratio measured on contended shared
+hardware is not a property of the code under test — it is a property of the machine —
+and this repo's own lesson 10 says performance claims belong to BenchmarkDotNet, which
+has the statistical machinery to make them properly. So the performance assertions were
+**deleted from the test suite**; the claim (~40x, on a quiet machine) lives in
+`docs/benchmarks/` where it is measured with warmup, repeats and error bars. What stayed
+in the test is the part that is deterministic: every aggregation strategy produces the
+same total.
+
+Two rules came out of it, and both are now applied:
+
+- **Timing assertions must be relative, never absolute.** `whenAll < sequential / 2`
+  survives a machine that is uniformly slower; `whenAll < 400ms` does not. Absolute
+  *lower* bounds derived from the work itself (four batches of 100 ms cannot finish in
+  under 400 ms) are fine, because they cannot be violated by slowness.
+- **Timing-sensitive classes share one non-parallel collection.** xUnit runs collections
+  in parallel by default, so a test measuring "is this faster?" was competing with three
+  other tests for the same four cores — measuring the test runner rather than the code.
+
+Verified by running the full suite four consecutive times under deliberate CPU
+saturation, which is what had reproduced the failure.
+
 ## Consequences
 
 - Test names state the claim, not the mechanism:
@@ -78,6 +110,8 @@ the scheduler's mood, and it will fail eventually.
   infrastructure, guarding the property everything else depends on.
 - One test deliberately shows the naive handler passing with a single actor, because
   "correct until a second user arrives" is the reason this bug reaches production.
+- `TimingSensitiveCollection` disables parallelisation for classes whose assertions
+  involve elapsed time, and no test asserts an absolute upper bound on duration.
 
 ## Interview angle
 

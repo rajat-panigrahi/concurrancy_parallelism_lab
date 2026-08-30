@@ -5,6 +5,7 @@ namespace Bank.Api.Shared.Persistence;
 public class BankDbContext(DbContextOptions<BankDbContext> options) : DbContext(options)
 {
     public DbSet<Account> Accounts => Set<Account>();
+    public DbSet<IdempotencyRecord> IdempotencyRecords => Set<IdempotencyRecord>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,5 +33,14 @@ public class BankDbContext(DbContextOptions<BankDbContext> options) : DbContext(
             .HasColumnType("xid")
             .ValueGeneratedOnAddOrUpdate()
             .IsConcurrencyToken();
+
+        var idempotency = modelBuilder.Entity<IdempotencyRecord>();
+
+        // The key IS the primary key. The uniqueness constraint is the concurrency
+        // control — two instances racing to insert the same key means exactly one wins.
+        idempotency.HasKey(r => r.Key);
+        idempotency.Property(r => r.Key).HasMaxLength(128);
+        idempotency.Property(r => r.Operation).HasMaxLength(64).IsRequired();
+        idempotency.Property(r => r.ResponseJson).IsRequired();
     }
 }

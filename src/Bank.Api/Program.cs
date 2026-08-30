@@ -5,6 +5,8 @@ using Bank.Api.Features.Fraud.RunFraudChecks;
 using Bank.Api.Features.Interest.CalculateInterest;
 using Bank.Api.Features.Lab.Streaming;
 using Bank.Api.Features.Transfers.DeadlockTransfer;
+using Bank.Api.Features.Transfers.IdempotentTransfer;
+using Bank.Api.Features.Withdrawals.DistributedLockWithdraw;
 using Bank.Api.Features.Withdrawals.LockWithdraw;
 using Bank.Api.Features.Withdrawals.NaiveWithdraw;
 using Bank.Api.Features.Withdrawals.OptimisticWithdraw;
@@ -59,12 +61,14 @@ builder.Services.AddSingleton<LabRunStore>();
 // Swap this one registration for a Postgres advisory lock and the `lock` strategy
 // survives scale-out. One line is the difference. See ADR-0012.
 builder.Services.AddSingleton<IAccountLock, InProcessAccountLock>();
+builder.Services.AddSingleton<PostgresAdvisoryAccountLock>();
 
 // Each concurrency lesson registers itself as a strategy the lab can run.
 builder.Services.AddSingleton<IWithdrawStrategy, NaiveWithdrawHandler>();
 builder.Services.AddSingleton<IWithdrawStrategy, LockWithdrawHandler>();
 builder.Services.AddSingleton<IWithdrawStrategy, OptimisticWithdrawHandler>();
 builder.Services.AddSingleton<IWithdrawStrategy, PessimisticWithdrawHandler>();
+builder.Services.AddSingleton<IWithdrawStrategy, DistributedLockWithdrawHandler>();
 
 builder.Services.AddSingleton<StartRunHandler>();
 builder.Services.AddSingleton<CalculateInterestHandler>();
@@ -72,6 +76,8 @@ builder.Services.AddSingleton<FraudCheckService>();
 builder.Services.AddSingleton<RunFraudChecksHandler>();
 builder.Services.AddSingleton<DeadlockTransferHandler>();
 builder.Services.AddSingleton<DeadlockDemoHandler>();
+builder.Services.AddSingleton<IdempotentTransferHandler>();
+builder.Services.AddSingleton<IdempotencyDemoHandler>();
 builder.Services.AddScoped<OpenAccountHandler>();
 builder.Services.AddHostedService<ContentionBroadcaster>();
 

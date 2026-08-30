@@ -1,9 +1,10 @@
-using System.Diagnostics;
 using Bank.Api.Features.Interest.CalculateInterest;
+using Bank.Api.UnitTests.Infrastructure;
 using Shouldly;
 
 namespace Bank.Api.UnitTests.Features.Interest;
 
+[Collection(TimingSensitiveCollection.Name)]
 public class InterestStrategiesTests
 {
     private static readonly InterestAccount[] Portfolio = InterestEngine.BuildPortfolio(50_000);
@@ -37,46 +38,24 @@ public class InterestStrategiesTests
         }
     }
 
+    /// <summary>
+    /// Performance claims deliberately do NOT live here.
+    /// </summary>
+    /// <remarks>
+    /// <para>"Thread-local aggregation is faster than locking per item" is a real result —
+    /// measured at roughly 40x on a quiet 4-core machine, and reported properly in
+    /// <c>docs/benchmarks/</c>. It is not asserted as a test, because a wall-clock ratio
+    /// on shared hardware is a flake waiting to happen: this exact assertion failed once
+    /// under CPU load during development, which is precisely the outcome ADR-0016 says a
+    /// concurrency suite must not tolerate.</para>
+    /// <para>Tests assert correctness; benchmarks assert speed. That split is the subject
+    /// of lesson 10, so the test suite had better honour it.</para>
+    /// </remarks>
     [Fact]
-    public void ThreadLocalAggregation_BeatsPerItemSynchronisation()
+    public void PerformanceClaimsBelongInBenchmarks_NotHere()
     {
-        // The lesson as an assertion: HOW you aggregate matters more than WHETHER you
-        // parallelise. Deliberately loose (2x) so it states the shape of the result
-        // rather than pinning a number to this machine's core count.
-        var localSums = BestOf(() => InterestStrategies.ParallelWithLocalSums(Portfolio));
-        var perItemLock = BestOf(() => InterestStrategies.ParallelWithLock(Portfolio));
-
-        localSums.ShouldBeLessThan(perItemLock / 2,
-            "locking once per item makes cores queue instead of compute; it is often slower than not parallelising at all");
-    }
-
-    [Fact]
-    public void ParallelWithPerItemLock_CanBeSlowerThanSequential()
-    {
-        // The "I parallelised it and it got slower" result, pinned down. Asserted only
-        // as "not meaningfully faster", because on some machines it lands close to
-        // sequential rather than well behind it.
-        var sequential = BestOf(() => InterestStrategies.Sequential(Portfolio));
-        var perItemLock = BestOf(() => InterestStrategies.ParallelWithLock(Portfolio));
-
-        perItemLock.ShouldBeGreaterThan(sequential * 0.9,
-            "four cores contending on one lock buy you nothing over one core contending on nothing");
-    }
-
-    private static double BestOf(Func<long> work, int repeats = 3)
-    {
-        work();
-
-        var best = double.MaxValue;
-
-        for (var i = 0; i < repeats; i++)
-        {
-            var clock = Stopwatch.StartNew();
-            work();
-            clock.Stop();
-            best = Math.Min(best, clock.Elapsed.TotalMilliseconds);
-        }
-
-        return best;
+        // What CAN be asserted deterministically about the fast path: it is correct.
+        InterestStrategies.ParallelWithLocalSums(Portfolio)
+            .ShouldBe(InterestStrategies.Sequential(Portfolio));
     }
 }
