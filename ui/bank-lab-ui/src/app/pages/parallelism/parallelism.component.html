@@ -1,0 +1,148 @@
+<div class="page">
+  <h1>Parallelism lab</h1>
+  <p class="lede">
+    Two ways to make things faster, and they are not interchangeable.
+    <strong>Parallelism</strong> uses more cores to finish CPU work sooner.
+    <strong>Concurrency</strong> overlaps waiting, using no extra cores at all.
+  </p>
+
+  @if (error(); as message) {
+    <div class="card error rise">{{ message }}</div>
+  }
+
+  <section class="card">
+    <header class="section-head">
+      <div>
+        <h2>CPU-bound — nightly interest</h2>
+        <p class="hint">The same total, computed six ways. Every one uses all your cores.</p>
+      </div>
+      <div class="controls">
+        <label class="field">
+          Accounts
+          <input type="number" [(ngModel)]="accountCount" min="1000" max="2000000" step="50000" />
+        </label>
+        <button (click)="runInterest()" [disabled]="busyInterest()">
+          {{ busyInterest() ? 'Computing…' : 'Run' }}
+        </button>
+      </div>
+    </header>
+
+    @if (interest(); as result) {
+      <p class="context mono">
+        {{ result.accountCount | number }} accounts · {{ result.processorCount }} cores
+      </p>
+
+      <div class="chart">
+        @for (t of result.timings; track t.name; let i = $index) {
+          <div class="row rise" [style.animation-delay.ms]="i * 70">
+            <div class="row-label">
+              <span class="name">{{ t.name }}</span>
+              <span class="hint agg">{{ t.aggregation }}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar" [class]="speedupClass(t.speedupVsSequential)"
+                   [style.width.%]="interestBarWidth(t.bestMs)"></div>
+            </div>
+            <div class="row-figures">
+              <span class="ms mono">{{ t.bestMs | number:'1.2-2' }}ms</span>
+              <span class="badge" [class]="speedupClass(t.speedupVsSequential)">
+                {{ t.speedupVsSequential | number:'1.2-2' }}×
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <p class="statement">{{ result.verdict }}</p>
+
+      <div class="notes">
+        @for (t of result.timings; track t.name) {
+          <div class="note"><strong class="mono">{{ t.name }}</strong> — {{ t.note }}</div>
+        }
+      </div>
+    } @else {
+      <p class="hint">Hit run. On a 4-core machine the spread between fastest and slowest is about 33×.</p>
+    }
+  </section>
+
+  <section class="card">
+    <header class="section-head">
+      <div>
+        <h2>I/O-bound — fraud checks</h2>
+        <p class="hint">Slow external calls. No CPU work at all — so parallelism has nothing to speed up.</p>
+      </div>
+      <div class="controls">
+        <label class="field">
+          Checks
+          <input type="number" [(ngModel)]="checks" min="1" max="100" />
+        </label>
+        <label class="field">
+          Latency (ms)
+          <input type="number" [(ngModel)]="latencyMs" min="10" max="1000" step="10" />
+        </label>
+        <label class="field">
+          Throttle
+          <input type="number" [(ngModel)]="maxConcurrency" min="1" max="50" />
+        </label>
+        <button (click)="runFraud()" [disabled]="busyFraud()">
+          {{ busyFraud() ? 'Calling…' : 'Run' }}
+        </button>
+      </div>
+    </header>
+
+    @if (fraud(); as result) {
+      <p class="context mono">
+        {{ result.checks }} checks × {{ result.latencyMs }}ms · {{ result.processorCount }} cores
+      </p>
+
+      <div class="chart">
+        @for (t of result.timings; track t.name; let i = $index) {
+          <div class="row rise" [style.animation-delay.ms]="i * 70">
+            <div class="row-label">
+              <span class="name">{{ t.name }}</span>
+              <span class="hint agg">{{ t.distinctThreads }} thread(s)</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar io" [style.width.%]="fraudBarWidth(t.durationMs)"></div>
+            </div>
+            <div class="row-figures">
+              <span class="ms mono">{{ t.durationMs | number:'1.0-0' }}ms</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <p class="statement">{{ result.verdict }}</p>
+
+      <div class="notes">
+        @for (t of result.timings; track t.name) {
+          <div class="note"><strong class="mono">{{ t.name }}</strong> — {{ t.note }}</div>
+        }
+      </div>
+    } @else {
+      <p class="hint">
+        Hit run. Watch the thread count: ten in-flight calls finish on a handful of threads,
+        because <code>await</code> releases threads rather than creating them.
+      </p>
+    }
+  </section>
+
+  <section class="grid two">
+    <div class="card rule">
+      <h3>The rule</h3>
+      <p>
+        <strong>async is for waiting. Parallel is for working.</strong> If the operation
+        waits on I/O, the CPU has nothing to do — more threads just means more idle threads.
+        If the operation computes, async achieves nothing; there is no waiting to overlap.
+      </p>
+    </div>
+    <div class="card rule">
+      <h3>The surprise</h3>
+      <p>
+        Parallelising with a lock per item is often <strong>slower than one core</strong> —
+        measured at 11× slower. Four cores queueing at one door. Partition the work and
+        aggregate once at the end instead.
+      </p>
+    </div>
+  </section>
+</div>

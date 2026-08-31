@@ -1,0 +1,29 @@
+# Single instance. The baseline: every strategy behaves correctly here, including the
+# ones that will break in docker-compose.scale.yml.
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: banklab
+      POSTGRES_PASSWORD: banklab
+      POSTGRES_DB: banklab
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U banklab"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.api
+    environment:
+      INSTANCE_ID: solo
+      ConnectionStrings__BankDb: "Host=postgres;Port=5432;Database=banklab;Username=banklab;Password=banklab"
+    ports:
+      - "5080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy

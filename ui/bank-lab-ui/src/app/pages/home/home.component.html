@@ -1,0 +1,122 @@
+<div class="page">
+  <h1>The mental model</h1>
+  <p class="lede">
+    Everything in this lab hangs off one picture. If you remember nothing else, remember
+    the two tellers.
+  </p>
+
+  <div class="grid two demo">
+    <section class="card">
+      <header>
+        <h2>Concurrency</h2>
+        <span class="badge info">one teller, many customers</span>
+      </header>
+      <p>
+        The teller serves you, and while you fill in a form they turn to the next customer.
+        Nobody is served <em>simultaneously</em> — there is one teller — but five customers
+        are <strong>in progress</strong> at once.
+      </p>
+
+      <div class="stage">
+        <div class="teller">🧑‍💼</div>
+        <div class="queue">
+          @for (c of customers; track c) {
+            <div class="customer" [class.active]="activeCustomer() === c">
+              <span class="who">🧍</span>
+              <span class="beam" [class.on]="activeCustomer() === c"></span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <p class="takeaway">
+        One thread, many operations in flight. That is <code>async</code>/<code>await</code>.
+        The thread is not watching you write — it goes elsewhere and comes back.
+      </p>
+    </section>
+
+    <section class="card">
+      <header>
+        <h2>Parallelism</h2>
+        <span class="badge info">many tellers, many counters</span>
+      </header>
+      <p>
+        Four tellers at four counters. Four customers genuinely served at the same instant.
+        You cannot get this by reorganising one person’s time — you need more tellers.
+      </p>
+
+      <div class="stage">
+        <div class="counters">
+          @for (counter of counters; track counter) {
+            <div class="counter">
+              <span class="who">🧑‍💼</span>
+              <div class="bar"><i [style.width.%]="counterProgress(counter)"></i></div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <p class="takeaway">
+        Multiple cores, all busy. That is <code>Parallel.ForEach</code> and PLINQ. A core
+        <em>is</em> a teller.
+      </p>
+    </section>
+  </div>
+
+  <div class="controls-row">
+    <button class="ghost" (click)="toggle()">{{ playing() ? 'Pause' : 'Play' }}</button>
+    <span class="hint">Both animations run off one clock, so the comparison is fair.</span>
+  </div>
+
+  <section class="card">
+    <h2>Side by side</h2>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th></th><th>Concurrency</th><th>Parallelism</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="dim">Question it answers</td><td>How do I make progress on many things?</td><td>How do I finish this faster?</td></tr>
+          <tr><td class="dim">In .NET</td><td><code>async</code>/<code>await</code>, <code>Task.WhenAll</code></td><td><code>Parallel.ForEach</code>, PLINQ</td></tr>
+          <tr><td class="dim">Needs more cores</td><td>No</td><td>Yes</td></tr>
+          <tr><td class="dim">Good for</td><td><strong>waiting</strong> — network, disk, database</td><td><strong>computing</strong> — maths over lots of data</td></tr>
+          <tr><td class="dim">Wins you</td><td>throughput while waiting</td><td>speed while calculating</td></tr>
+          <tr><td class="dim">Measured here</td><td>2005ms → 204ms on 5 threads</td><td>18.4ms → 5.0ms on 4 cores</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="grid three">
+    <div class="card rule">
+      <h3>async is not parallel</h3>
+      <p>
+        And <code>Task.Run</code> is not async — it moves blocking work to another thread
+        and waits for it. Measured at <strong>1,857× slower</strong> than just calling the
+        method.
+      </p>
+    </div>
+    <div class="card rule">
+      <h3>A race is a gap</h3>
+      <p>
+        Not “two things at once”. It is <em>read → think → write</em> where somebody wrote
+        during your think. One core, one thread, still races.
+      </p>
+    </div>
+    <div class="card rule">
+      <h3>Optimistic vs pessimistic</h3>
+      <p>
+        Collisions rare → detect and retry. Collisions common → queue up and wait. The
+        deciding variable is the conflict rate, not preference.
+      </p>
+    </div>
+  </section>
+
+  <section class="card cta">
+    <h2>Now go break something</h2>
+    <p>
+      The <a routerLink="/race">Race lab</a> starts five withdrawals of ₹100 against an
+      account holding ₹100. All five are approved. Watch where the other ₹400 goes.
+    </p>
+  </section>
+</div>

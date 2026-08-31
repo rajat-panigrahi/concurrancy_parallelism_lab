@@ -1,0 +1,20 @@
+# Build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY Directory.Build.props ./
+COPY src/Bank.Api/Bank.Api.csproj src/Bank.Api/
+RUN dotnet restore src/Bank.Api/Bank.Api.csproj
+
+COPY src/Bank.Api/ src/Bank.Api/
+RUN dotnet publish src/Bank.Api/Bank.Api.csproj -c Release -o /app --no-restore
+
+# Run
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=build /app ./
+
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:8080
+
+ENTRYPOINT ["dotnet", "Bank.Api.dll"]

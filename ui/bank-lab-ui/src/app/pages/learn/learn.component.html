@@ -1,0 +1,72 @@
+<div class="page">
+  <h1>Learn</h1>
+  <p class="lede">
+    The written lessons live in <code>docs/lessons/</code>; the reasoning behind every
+    design decision lives in <code>docs/architecture/</code>. Below: the map, and flashcards
+    for the night before.
+  </p>
+
+  <section class="card">
+    <h2>The lessons</h2>
+    <p class="hint">
+      Read 00 first — everything else assumes its vocabulary. Then 01 and 02 as a pair:
+      the same scenario broken, fixed, then the fix shown to be fragile at scale.
+    </p>
+
+    <div class="lessons">
+      @for (lesson of lessons; track lesson.number) {
+        <div class="lesson rise" [style.animation-delay.ms]="$index * 35">
+          <span class="num mono">{{ lesson.number }}</span>
+          <div class="body">
+            <strong>{{ lesson.title }}</strong>
+            <span class="hint">{{ lesson.takeaway }}</span>
+          </div>
+          <code class="file">{{ lesson.file }}</code>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="card">
+    <header class="cards-head">
+      <div>
+        <h2>Flashcards</h2>
+        <p class="hint">Click a card to reveal the answer. Every one is backed by something runnable in this repo.</p>
+      </div>
+      <div class="controls">
+        <button class="ghost" (click)="flipAll(true)">Reveal all</button>
+        <button class="ghost" (click)="flipAll(false)">Reset</button>
+      </div>
+    </header>
+
+    <div class="cards">
+      @for (card of cards; track card.question; let i = $index) {
+        <button class="flashcard" [class.flipped]="isFlipped(i)" (click)="toggle(i)" type="button">
+          <div class="inner">
+            <div class="face front">
+              <span class="q">{{ card.question }}</span>
+              <span class="prompt hint">click to reveal</span>
+            </div>
+            <div class="face back">
+              <span class="a">{{ card.answer }}</span>
+              @if (card.evidence) {
+                <span class="evidence mono">{{ card.evidence }}</span>
+              }
+            </div>
+          </div>
+        </button>
+      }
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Questions to ask them</h2>
+    <p class="hint">Interviews go both ways, and these signal you have actually thought about the topic.</p>
+    <ul class="asks">
+      <li>“What’s your conflict rate on the hottest entity?” — most teams have never measured it.</li>
+      <li>“Are your services genuinely stateless, or stateless-except-for-a-few-caches?”</li>
+      <li>“Do you have idempotency keys on write endpoints? What happens when the load balancer retries?”</li>
+      <li>“What’s your p99, and what’s your budget for it?”</li>
+    </ul>
+  </section>
+</div>

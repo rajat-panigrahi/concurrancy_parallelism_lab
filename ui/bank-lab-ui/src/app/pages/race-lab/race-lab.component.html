@@ -1,0 +1,275 @@
+<div class="page">
+  <h1>Race lab</h1>
+  <p class="lede">
+    Several people withdraw from the same account at the same moment. Watch who reads what,
+    who writes, <strong>who wins — and who is told “approved” while their money quietly
+    disappears.</strong>
+  </p>
+
+  <section class="card controls">
+    <label class="field">
+      Strategy
+      <select [(ngModel)]="strategy">
+        @for (s of strategies(); track s.name) {
+          <option [value]="s.name">{{ s.name }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="field">
+      Actors
+      <input type="number" [(ngModel)]="actors" min="1" max="32" />
+    </label>
+
+    <label class="field">
+      Each withdraws
+      <input type="number" [(ngModel)]="amountEach" min="1" />
+    </label>
+
+    <label class="field">
+      Starting balance
+      <input type="number" [(ngModel)]="startingBalance" min="0" />
+    </label>
+
+    <label class="field">
+      Think time (ms)
+      <input type="number" [(ngModel)]="thinkTimeMs" min="0" max="2000" />
+    </label>
+
+    <label class="toggle" title="Hold every actor at its checkpoint so the contention is guaranteed rather than lucky">
+      <input type="checkbox" [(ngModel)]="forceRace" />
+      Force the race
+    </label>
+
+    <span class="spacer"></span>
+    <button (click)="run()" [disabled]="running()">
+      {{ running() ? 'Running…' : 'Run' }}
+    </button>
+  </section>
+
+  @if (selected(); as s) {
+    <p class="hint strategy-note">
+      <code>{{ s.name }}</code> — {{ s.summary }}
+      @if (s.scalesAcrossInstances) {
+        <span class="badge good">survives scale-out</span>
+      } @else {
+        <span class="badge bad">breaks at &gt;1 instance</span>
+      }
+      <span class="badge mute">{{ s.storage }}</span>
+    </p>
+  }
+
+  @if (!forceRace) {
+    <p class="hint">
+      Free-running: the bug now depends on luck. Run it a few times — sometimes the money
+      vanishes, sometimes it doesn’t. That is exactly why races survive testing.
+    </p>
+  }
+
+  <p class="live-status hint">
+    @if (liveConnected()) {
+      <span class="badge good">live feed connected</span>
+      Events stream over SignalR as the run happens.
+    } @else {
+      <span class="badge mute">live feed off</span>
+      The run response carries the full timeline anyway — SignalR is an accelerator, not
+      the source of truth.
+    }
+  </p>
+
+  @if (error(); as message) {
+    <div class="card error rise">{{ message }}</div>
+  }
+
+  @if (liveEvents().length > 0 && running()) {
+    <section class="card ticker rise">
+      <h2>Live</h2>
+      <div class="ticker-rows">
+        @for (e of liveEvents().slice(-12); track e.sequence) {
+          <div class="ticker-row mono rise">
+            <span class="seq">{{ e.sequence }}</span>
+            <span class="who">{{ e.actorId }}</span>
+            <span class="phase">{{ e.phase }}</span>
+            <span class="hint">{{ e.note }}</span>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  @if (summary(); as s) {
+    <section class="verdict card rise" [class.bad]="!s.moneyIsConserved" [class.good]="s.moneyIsConserved">
+      <div class="balances">
+        <div class="balance">
+          <span class="label">Expected</span>
+          <span class="value">{{ s.expectedBalance | number:'1.2-2' }}</span>
+        </div>
+        <div class="arrow">vs</div>
+        <div class="balance">
+          <span class="label">Actual</span>
+          <span class="value">{{ s.finalBalance | number:'1.2-2' }}</span>
+        </div>
+        @if (!s.moneyIsConserved) {
+          <div class="balance missing">
+            <span class="label">Unaccounted for</span>
+            <span class="value">{{ (s.discrepancy < 0 ? -s.discrepancy : s.discrepancy) | number:'1.2-2' }}</span>
+          </div>
+        }
+      </div>
+      <p class="statement">{{ s.verdict }}</p>
+    </section>
+
+    <section class="grid three stats">
+      <div class="card stat">
+        <span class="label">Winners</span>
+        <span class="value good">{{ s.winners.length }}</span>
+        <span class="hint">writes that stand</span>
+      </div>
+      <div class="card stat" [class.alarm]="s.silentLosers.length > 0">
+        <span class="label">Silent losers</span>
+        <span class="value" [class.bad]="s.silentLosers.length > 0">{{ s.silentLosers.length }}</span>
+        <span class="hint">told “yes”, then overwritten</span>
+      </div>
+      <div class="card stat">
+        <span class="label">Refused</span>
+        <span class="value">{{ s.rejected.length }}</span>
+        <span class="hint">correctly declined</span>
+      </div>
+      <div class="card stat">
+        <span class="label">Attempts</span>
+        <span class="value">{{ s.totalAttempts }}</span>
+        <span class="hint">{{ s.conflicts }} conflict(s) — wasted work</span>
+      </div>
+      <div class="card stat">
+        <span class="label">Total waiting</span>
+        <span class="value">{{ s.totalWaitedMs | number:'1.0-1' }}<small>ms</small></span>
+        <span class="hint">time spent blocked</span>
+      </div>
+      <div class="card stat">
+        <span class="label">Wall time</span>
+        <span class="value">{{ s.durationMs | number:'1.0-1' }}<small>ms</small></span>
+        <span class="hint">start to finish</span>
+      </div>
+    </section>
+
+    <section class="card timeline">
+      <h2>Timeline</h2>
+      <p class="hint">
+        One lane per actor, in the order things actually happened. Hover any marker for the
+        balance and version it saw.
+      </p>
+
+      <div class="legend">
+        <span><i style="background: var(--phase-read)"></i> read</span>
+        <span><i style="background: var(--phase-wait)"></i> waiting / gated</span>
+        <span><i style="background: var(--phase-write)"></i> write</span>
+        <span><i style="background: var(--phase-commit)"></i> committed</span>
+        <span><i style="background: var(--phase-conflict)"></i> conflict / retry</span>
+        <span><i style="background: var(--phase-lost)"></i> lost</span>
+      </div>
+
+      @for (lane of lanes(); track lane.actorId; let i = $index) {
+        <div class="lane rise" [style.animation-delay.ms]="i * 55">
+          <div class="lane-head">
+            <span class="actor mono">{{ lane.actorId }}</span>
+            <span class="badge"
+                  [class.good]="lane.outcome === 'won'"
+                  [class.bad]="lane.outcome === 'lost'"
+                  [class.mute]="lane.outcome === 'rejected'">
+              {{ lane.outcome === 'won' ? '🏆 ' : lane.outcome === 'lost' ? '✕ ' : '' }}{{ lane.label }}
+            </span>
+          </div>
+
+          <div class="track" [class.lost]="lane.outcome === 'lost'">
+            @for (marker of markersFor(lane); track marker.event.sequence) {
+              <span class="marker"
+                    [style.left.%]="marker.leftPercent"
+                    [style.background]="marker.colour"
+                    [style.animation-delay.ms]="i * 55 + 120"
+                    [title]="marker.tooltip">{{ marker.glyph }}</span>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="axis">
+        <span>0 ms</span>
+        <span class="spacer"></span>
+        <span>{{ s.durationMs | number:'1.0-1' }} ms</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>What each actor saw</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Actor</th>
+              <th>Outcome</th>
+              <th class="num">Amount</th>
+              <th class="num">Attempts</th>
+              <th class="num">Waited</th>
+              <th>Why</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (o of s.outcomes; track o.actorId) {
+              <tr>
+                <td class="mono">{{ o.actorId }}</td>
+                <td>
+                  <span class="badge"
+                        [class.good]="o.actuallyLanded"
+                        [class.bad]="o.toldItSucceeded && !o.actuallyLanded"
+                        [class.mute]="!o.toldItSucceeded">{{ o.finalPhase }}</span>
+                </td>
+                <td class="num">{{ o.amount | number:'1.2-2' }}</td>
+                <td class="num">{{ o.attempts }}</td>
+                <td class="num">{{ o.waitedMs | number:'1.0-1' }}ms</td>
+                <td class="hint">{{ o.note }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Raw events</h2>
+      <p class="hint">
+        The <code>saw ver</code> column is the whole bug: when every actor read the same
+        version, every actor computed its new balance from the same stale number.
+      </p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th class="num">#</th>
+              <th>Actor</th>
+              <th>Phase</th>
+              <th class="num">ms</th>
+              <th class="num">saw bal</th>
+              <th class="num">saw ver</th>
+              <th class="num">wrote ver</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (e of timeline(); track e.sequence) {
+              <tr>
+                <td class="num">{{ e.sequence }}</td>
+                <td class="mono">{{ e.actorId }}</td>
+                <td class="mono">{{ e.phase }}</td>
+                <td class="num">{{ e.elapsedMs | number:'1.2-2' }}</td>
+                <td class="num">{{ e.balanceSeen !== null ? (e.balanceSeen | number:'1.2-2') : '' }}</td>
+                <td class="num">{{ e.versionSeen ?? '' }}</td>
+                <td class="num">{{ e.versionWritten ?? '' }}</td>
+                <td class="hint">{{ e.note }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+</div>

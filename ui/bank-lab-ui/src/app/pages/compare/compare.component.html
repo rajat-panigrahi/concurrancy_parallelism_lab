@@ -1,0 +1,106 @@
+<div class="page">
+  <h1>Strategy comparison</h1>
+  <p class="lede">
+    Every strategy, identical input: 5 actors withdrawing ₹100 each from an account holding
+    ₹100, with the race forced. The only variable is the handler — so the differences
+    below are real, not noise.
+  </p>
+
+  <div class="controls">
+    <button (click)="runAll()" [disabled]="running()">
+      {{ running() ? 'Running all…' : 'Run every strategy' }}
+    </button>
+    <span class="hint">Postgres-backed strategies take a little longer — they do real I/O.</span>
+  </div>
+
+  @if (error(); as message) {
+    <div class="card error rise">{{ message }}</div>
+  }
+
+  @if (rows().length > 0) {
+    <section class="card">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Strategy</th>
+              <th>Correct?</th>
+              <th class="num">Final</th>
+              <th class="num">Silent losers</th>
+              <th class="num">Attempts</th>
+              <th class="num">Conflicts</th>
+              <th class="num">Waited</th>
+              <th>Pays in</th>
+              <th>Scale-out</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of rows(); track row.info.name; let i = $index) {
+              <tr class="rise" [style.animation-delay.ms]="i * 60">
+                <td class="mono">{{ row.info.name }}</td>
+                <td>
+                  @if (row.summary.moneyIsConserved) {
+                    <span class="badge good">correct</span>
+                  } @else {
+                    <span class="badge bad">loses money</span>
+                  }
+                </td>
+                <td class="num">{{ row.summary.finalBalance | number:'1.2-2' }}</td>
+                <td class="num" [class.alarm]="row.summary.silentLosers.length > 0">
+                  {{ row.summary.silentLosers.length }}
+                </td>
+                <td class="num">{{ row.summary.totalAttempts }}</td>
+                <td class="num">{{ row.summary.conflicts }}</td>
+                <td class="num">{{ row.summary.totalWaitedMs | number:'1.0-1' }}ms</td>
+                <td class="hint">{{ currency(row) }}</td>
+                <td>
+                  @if (row.info.scalesAcrossInstances) {
+                    <span class="badge good">survives</span>
+                  } @else {
+                    <span class="badge bad">breaks</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="hint footnote">
+        Read the <strong>conflicts</strong> and <strong>waited</strong> columns together.
+        Optimistic conflicts and never waits; pessimistic waits and never conflicts. Both
+        are correct — they just pay in different currencies.
+      </p>
+    </section>
+
+    <section class="grid two">
+      @for (row of rows(); track row.info.name) {
+        <div class="card verdict-card" [class.bad]="!row.summary.moneyIsConserved">
+          <header>
+            <h3 class="mono">{{ row.info.name }}</h3>
+            <span class="badge mute">{{ row.info.storage }}</span>
+          </header>
+          <p class="summary">{{ row.info.summary }}</p>
+          <p class="statement">{{ row.summary.verdict }}</p>
+        </div>
+      }
+    </section>
+  }
+
+  <section class="card guide">
+    <h2>Which one, when</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Situation</th><th>Use</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Conflicts rare, short transactions, web API</td><td class="mono">optimistic</td><td class="hint">No locks across requests; cost is an occasional retry</td></tr>
+          <tr><td>Hot row everyone writes</td><td class="mono">pessimistic</td><td class="hint">Optimistic would retry-storm: N× work for 1× throughput</td></tr>
+          <tr><td>User think time (an edit form open for minutes)</td><td class="mono">optimistic</td><td class="hint">Never hold a DB lock across a coffee break</td></tr>
+          <tr><td>Redoing the work has side effects</td><td class="mono">pessimistic</td><td class="hint">A retry means doing it twice — sometimes a second email</td></tr>
+          <tr><td>Single process, in-memory state</td><td class="mono">lock</td><td class="hint">Cheapest — and dies the moment you add an instance</td></tr>
+          <tr><td>Must serialise non-row work across instances</td><td class="mono">distributed-lock</td><td class="hint">Process memory isn’t shared</td></tr>
+          <tr><td>The logic fits in one SQL statement</td><td>none</td><td class="hint"><code>SET balance = balance - 40 WHERE balance &gt;= 40</code> — no gap, no coordination</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
