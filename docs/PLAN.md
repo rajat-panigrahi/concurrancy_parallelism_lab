@@ -1,11 +1,15 @@
 # Concurrency & Parallelism Lab — a .NET interview teaching project
 
-> **Note.** This is the plan as approved, kept in the repo so the project explains
-> its own roadmap. Two dependencies named in the original plan were dropped during M0
-> after checking their licences: **FluentAssertions** (commercial from v8 — replaced by
-> Shouldly, MIT) and **NBomber** (commercial subscription licence v3.0, effective
-> September 2025 — replaced by a small in-repo load harness). Same reasoning as
-> ADR-0002. Everything else stands as approved.
+> **Status: delivered.**
+>
+> **All six milestones are built, tested and merged.** This document is kept as the plan
+> of record — what was intended, and where the finished work diverged from it. The
+> divergences are listed under [What shipped vs what was planned](#what-shipped-vs-what-was-planned);
+> everything else below reads as originally approved, in the future tense it was written in.
+>
+> For what the project *is* rather than what it was going to be, start at
+> [`../README.md`](../README.md); for how each concept works, [`lessons/`](lessons/); for
+> why it is built this way, [`architecture/`](architecture/).
 
 ## Context
 
@@ -20,8 +24,8 @@ mental model you trust. Four things keep coming back:
    application-layer concern or a Docker/Kubernetes concern? If you have 100 users
    today and 1M tomorrow, what actually has to change in the code?
 
-The repo (`rajat-panigrahi/concurrancy_parallelism_lab`) is currently empty — one
-commit, README + LICENSE only. So this is a greenfield build.
+The repo was empty when this was written — one commit, README + LICENSE only — so this
+was a greenfield build.
 
 The outcome: a small banking app where every concurrency concept is a **runnable
 experiment with a visible verdict**, backed by tests that prove the behaviour and
@@ -365,10 +369,20 @@ section, so the two doc sets reinforce each other rather than duplicate.
 
 ---
 
-## Milestones (each ends in a commit on `claude/dotnet-concurrency-interview-y590dn`)
+## Milestones — all delivered
 
 Docs are written *with* the code that motivates them, never bolted on at the end —
 an ADR whose consequences you haven't felt yet is a guess.
+
+| Milestone | Status | Landed in |
+|---|---|---|
+| M0 Foundation | ✅ | `0285b8b` |
+| M1 The race is visible | ✅ | `6aa3509` |
+| M2 Optimistic vs pessimistic | ✅ | `9a21f36` |
+| M3 Parallelism & async | ✅ | `65919a1` |
+| M5 Scale | ✅ | `89a56ed` — built **before** M4, see below |
+| M4 Angular UI | ✅ | `80dcf7d` |
+| *(unplanned)* Claude Code scaffolding | ✅ | `6b8d876` |
 
 - **M0 — Foundation.** Install .NET 8 SDK, solution + projects, `IEndpoint`
   convention, in-memory store, EF Core + Npgsql, start local Postgres, first
@@ -389,6 +403,46 @@ an ADR whose consequences you haven't felt yet is a guess.
   3 replicas) + nginx, load-harness scenarios, k6 scripts, Scale Lab charts.
   **Docs:** lessons 09, 11, ADRs 0012, 0014, and `trade-off-matrix.md` assembled
   from every ADR now that all consequences are known.
+
+---
+
+## What shipped vs what was planned
+
+Kept deliberately, because the gap between intent and outcome is the interesting part of
+any plan — and because two of these changes are themselves interview material.
+
+**Three dependencies were dropped on licence grounds, after reading the licences.**
+The plan named FluentAssertions and NBomber, and MediatR had already been ruled out.
+FluentAssertions is commercial from v8; **NBomber ships a commercial subscription
+agreement (licence v3.0, September 2025)** — its NuGet package sets
+`requireLicenseAcceptance` and carries a licence *file* rather than an SPDX expression.
+Replaced by **Shouldly** (MIT) and a ~200-line in-repo load harness. The stance is in
+[ADR-0002](architecture/adr/0002-no-mediatr.md): a public teaching repo should not hand a
+reader a dependency they cannot use at work.
+
+**M5 was built before M4.** The Scale Lab page renders load-test results, so producing
+the measurements first meant the UI could display real numbers instead of placeholders.
+
+**A seventh, unplanned milestone: Claude Code scaffolding.** `CLAUDE.md` plus `.claude/`
+— path-scoped rules, slash commands, an `add-slice` skill, a `concurrency-reviewer`
+agent, and a hook that warns when an ADR is missing its mandatory sections. Prompted by a
+question about project structure, and it earned its place: parts of this codebase are
+broken on purpose and a fresh session would otherwise "fix" them.
+
+**A flake was found and removed rather than widened.** Two unit tests asserted a
+*performance ratio*; one failed under CPU load, reproduced deliberately with four busy
+loops. A wall-clock ratio on contended hardware is a property of the machine, not the
+code, so the assertions were deleted — the claim lives in `docs/benchmarks/` where it is
+measured with warmup and error bars. Recorded in
+[ADR-0016](architecture/adr/0016-three-tier-test-strategy.md).
+
+**Two bugs surfaced only by driving the UI in a real browser**, not by the build passing:
+CORS allowed `localhost:4200` but not `127.0.0.1:4200` (different origins to a browser),
+and a SignalR client cannot join a run's group before the server has generated its id.
+
+**Still not executed here:** the three-replica demo. There is no Docker daemon in this
+environment, so `deploy/docker-compose.scale.yml` is `docker compose config`-validated
+only. Everything else in this repo was run and measured.
 
 ---
 

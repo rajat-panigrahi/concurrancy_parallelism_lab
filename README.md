@@ -7,8 +7,9 @@ rather than memorise definitions.
 You start five withdrawals against an account holding ₹100 and watch, event by event,
 who read what, who wrote, **who won, and who silently lost**.
 
-> **Status:** in progress. See [`docs/PLAN.md`](docs/PLAN.md) for the roadmap and
-> which milestone is landed.
+> **Status:** complete. All six milestones are built, tested and merged — 48 tests, 12
+> lessons, 16 ADRs, and a working UI. [`docs/PLAN.md`](docs/PLAN.md) keeps the original
+> plan alongside what actually shipped and where the two diverged.
 
 ---
 
@@ -40,7 +41,7 @@ Three things worth committing to memory:
 | [`docs/lessons/`](docs/lessons/) | **How** it works — the teaching narrative, in plain developer language |
 | [`docs/architecture/`](docs/architecture/) | **Why** it's built this way — ADRs with the trade-offs and the rejected options |
 | [`docs/architecture/system-overview.md`](docs/architecture/system-overview.md) | Diagrams: what talks to what, and where mutable state lives |
-| [`docs/PLAN.md`](docs/PLAN.md) | The roadmap |
+| [`docs/PLAN.md`](docs/PLAN.md) | The original plan, and what shipped differently |
 
 ## Getting started
 
