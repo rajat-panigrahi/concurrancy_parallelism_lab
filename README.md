@@ -140,6 +140,33 @@ deploy/                                Dockerfiles, compose, nginx
 Vertical slice, not layered — and [ADR-0001](docs/architecture/adr/0001-vertical-slice-architecture.md)
 explains why, including the case against.
 
+## Working on this with Claude Code
+
+The repo ships its own [Claude Code](https://claude.com/claude-code) setup, because a lot
+of what makes this codebase work is not derivable from reading it — **parts of it are
+broken on purpose and must stay that way.**
+
+| Path | What it does |
+|---|---|
+| [`CLAUDE.md`](CLAUDE.md) | Loaded every session: the commands, the "do not fix these" list, and the conventions that differ from .NET defaults |
+| [`.claude/rules/`](.claude/rules/) | Four topic files, each **path-scoped**, so they load only when Claude touches `src/`, `tests/`, `docs/` or `ui/` and cost nothing otherwise |
+| [`.claude/commands/`](.claude/commands/) | `/lab` runs a strategy and explains the verdict · `/adr` scaffolds the next ADR · `/measure` regenerates the benchmarks and refreshes every quoted number |
+| [`.claude/skills/add-slice/`](.claude/skills/add-slice/) | The full checklist for adding a concurrency slice — handler, registration, three test tiers, lesson, ADR. Loads only when used |
+| [`.claude/agents/`](.claude/agents/) | `concurrency-reviewer`: reviews a diff for *this* repo's hazards — gate placement, an accidentally "fixed" deliberate bug, absolute timing assertions |
+| [`.claude/hooks/`](.claude/hooks/) | Warns when an ADR is missing its mandatory *Why not the others* / *Trade-offs accepted* / *Interview angle* sections |
+| [`.claude/settings.json`](.claude/settings.json) | Pre-approves the commands this repo runs constantly, and wires the hook |
+
+The rules encode real failures from building this: gating inside a critical section
+(deadlock), an absolute timing assertion (flaked under load), and an unread primary
+constructor parameter (`TreatWarningsAsErrors` makes CS9113 a build failure).
+
+**Deliberately not included.** `.mcp.json` — there is nothing external to integrate, since
+PostgreSQL is reached through EF Core rather than MCP. Generic `code-reviewer` and
+`security-auditor` agents — Claude Code already ships `/code-review` and
+`/security-review`, and duplicates would compete with them. `CLAUDE.local.md` and
+`.claude/settings.local.json` are gitignored personal overrides; create them yourself if
+you want machine-specific settings.
+
 ## A note on dependencies
 
 This repo deliberately avoids libraries whose licence would stop a reader using the
