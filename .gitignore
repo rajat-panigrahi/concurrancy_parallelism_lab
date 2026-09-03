@@ -66,3 +66,7 @@ node_modules/
 ui/**/dist/
 .angular/
 BenchmarkDotNet.Artifacts/
+
+# Claude Code — personal overrides, not shared with the team
+CLAUDE.local.md
+.claude/settings.local.json
