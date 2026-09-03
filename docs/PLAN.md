@@ -1,6 +1,6 @@
 # Concurrency & Parallelism Lab — a .NET interview teaching project
 
-> ## Status: delivered
+> **Status: delivered.**
 >
 > **All six milestones are built, tested and merged.** This document is kept as the plan
 > of record — what was intended, and where the finished work diverged from it. The
