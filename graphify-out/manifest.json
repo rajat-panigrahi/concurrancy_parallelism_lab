@@ -1,0 +1,857 @@
+{
+  ".claude/hooks/validate-adr.sh": {
+    "mtime": 1788406898.2007396,
+    "ast_hash": "7a4e66abf46a5273f0f91bdd084f0a62",
+    "semantic_hash": "7a4e66abf46a5273f0f91bdd084f0a62"
+  },
+  ".claude/settings.json": {
+    "mtime": 1788406898.207424,
+    "ast_hash": "ae99ca61a648609f44582225059ae06b",
+    "semantic_hash": "ae99ca61a648609f44582225059ae06b"
+  },
+  ".config/dotnet-tools.json": {
+    "mtime": 1788406898.207424,
+    "ast_hash": "94c488c06245246b6854dca2a1adb445",
+    "semantic_hash": "94c488c06245246b6854dca2a1adb445"
+  },
+  "ConcurrencyLab.sln": {
+    "mtime": 1788406898.2093847,
+    "ast_hash": "fe1ed691bed8bcfc06ccd552918b0610",
+    "semantic_hash": "fe1ed691bed8bcfc06ccd552918b0610"
+  },
+  "docs/benchmarks/loadtest-threadpool.json": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "562497cc62610a55172ab86fbd2d7f31",
+    "semantic_hash": "562497cc62610a55172ab86fbd2d7f31"
+  },
+  "loadtests/k6/hot-account.js": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "7a71d14c8b6b682f92a52e45dabb21e6",
+    "semantic_hash": "7a71d14c8b6b682f92a52e45dabb21e6"
+  },
+  "loadtests/k6/threadpool.js": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "a8f6a952ebd1b7854825eb833578d963",
+    "semantic_hash": "a8f6a952ebd1b7854825eb833578d963"
+  },
+  "src/Bank.Api/Bank.Api.csproj": {
+    "mtime": 1788406898.2230997,
+    "ast_hash": "b9046663197e7546f32551ef83b36819",
+    "semantic_hash": "b9046663197e7546f32551ef83b36819"
+  },
+  "src/Bank.Api/Features/Accounts/GetAccount/GetAccountEndpoint.cs": {
+    "mtime": 1788406898.2230997,
+    "ast_hash": "3376ee32c491cd40618b70ca10d22b02",
+    "semantic_hash": "3376ee32c491cd40618b70ca10d22b02"
+  },
+  "src/Bank.Api/Features/Accounts/OpenAccount/OpenAccountEndpoint.cs": {
+    "mtime": 1788406898.2230997,
+    "ast_hash": "1b30c447dd7702cdce38ca00cd365253",
+    "semantic_hash": "1b30c447dd7702cdce38ca00cd365253"
+  },
+  "src/Bank.Api/Features/Fraud/RunFraudChecks/FraudCheckService.cs": {
+    "mtime": 1788406898.2230997,
+    "ast_hash": "8326ac2ea8d29de9fecdf30f74e97a85",
+    "semantic_hash": "8326ac2ea8d29de9fecdf30f74e97a85"
+  },
+  "src/Bank.Api/Features/Fraud/RunFraudChecks/RunFraudChecksEndpoint.cs": {
+    "mtime": 1788406898.2230997,
+    "ast_hash": "9c6fcc08be69f47ea8cc982354506127",
+    "semantic_hash": "9c6fcc08be69f47ea8cc982354506127"
+  },
+  "src/Bank.Api/Features/Interest/CalculateInterest/CalculateInterestEndpoint.cs": {
+    "mtime": 1788406898.2246046,
+    "ast_hash": "0b2e23751e0508b1e8950e8422911ce1",
+    "semantic_hash": "0b2e23751e0508b1e8950e8422911ce1"
+  },
+  "src/Bank.Api/Features/Interest/CalculateInterest/InterestEngine.cs": {
+    "mtime": 1788406898.2246046,
+    "ast_hash": "157679d8b6e4a18f1bdb53c39015b89d",
+    "semantic_hash": "157679d8b6e4a18f1bdb53c39015b89d"
+  },
+  "src/Bank.Api/Features/Interest/CalculateInterest/InterestStrategies.cs": {
+    "mtime": 1788406898.2246046,
+    "ast_hash": "94ed3b51613286772e056cf1364e3a2a",
+    "semantic_hash": "94ed3b51613286772e056cf1364e3a2a"
+  },
+  "src/Bank.Api/Features/Lab/GetRun/GetRunEndpoint.cs": {
+    "mtime": 1788406898.2246046,
+    "ast_hash": "a3502ce225fb1caeb84d180677630df6",
+    "semantic_hash": "a3502ce225fb1caeb84d180677630df6"
+  },
+  "src/Bank.Api/Features/Lab/LabContracts.cs": {
+    "mtime": 1788406898.2246046,
+    "ast_hash": "de328e8e09163a4f32925c538969d8cf",
+    "semantic_hash": "de328e8e09163a4f32925c538969d8cf"
+  },
+  "src/Bank.Api/Features/Lab/LabRunStore.cs": {
+    "mtime": 1788406898.2246046,
+    "ast_hash": "4fbd4c162ed1e33e791449f069f86a89",
+    "semantic_hash": "4fbd4c162ed1e33e791449f069f86a89"
+  },
+  "src/Bank.Api/Features/Lab/StartRun/StartRunEndpoint.cs": {
+    "mtime": 1788406898.2246046,
+    "ast_hash": "a25fc54c4f85e2e889156aa245822e26",
+    "semantic_hash": "a25fc54c4f85e2e889156aa245822e26"
+  },
+  "src/Bank.Api/Features/Lab/StartRun/StartRunHandler.cs": {
+    "mtime": 1788406898.2246046,
+    "ast_hash": "d3337edf9ae7f494f91fafa9bd2bef19",
+    "semantic_hash": "d3337edf9ae7f494f91fafa9bd2bef19"
+  },
+  "src/Bank.Api/Features/Lab/Streaming/ContentionBroadcaster.cs": {
+    "mtime": 1788406898.2246046,
+    "ast_hash": "4ce1d73808d700a8991f4fe0227fb913",
+    "semantic_hash": "4ce1d73808d700a8991f4fe0227fb913"
+  },
+  "src/Bank.Api/Features/Lab/Streaming/ContentionHub.cs": {
+    "mtime": 1788406898.226155,
+    "ast_hash": "62cbefba50a97d9f5806ec8578c9bb20",
+    "semantic_hash": "62cbefba50a97d9f5806ec8578c9bb20"
+  },
+  "src/Bank.Api/Features/Scale/ThreadPoolDemo/ScaleEndpoints.cs": {
+    "mtime": 1788406898.226155,
+    "ast_hash": "14772d055ceb25eb34cb23adcbbf5c64",
+    "semantic_hash": "14772d055ceb25eb34cb23adcbbf5c64"
+  },
+  "src/Bank.Api/Features/Transfers/DeadlockTransfer/DeadlockDemoEndpoint.cs": {
+    "mtime": 1788406898.226155,
+    "ast_hash": "787db27dd88a3fe133ad1f89af840be4",
+    "semantic_hash": "787db27dd88a3fe133ad1f89af840be4"
+  },
+  "src/Bank.Api/Features/Transfers/DeadlockTransfer/DeadlockTransferHandler.cs": {
+    "mtime": 1788406898.226155,
+    "ast_hash": "d0cb88de0606c51e7a8a9bb061f4b9d2",
+    "semantic_hash": "d0cb88de0606c51e7a8a9bb061f4b9d2"
+  },
+  "src/Bank.Api/Features/Transfers/DeadlockTransfer/TransferContracts.cs": {
+    "mtime": 1788406898.226155,
+    "ast_hash": "65e719b277850fa968a2cccd967349d4",
+    "semantic_hash": "65e719b277850fa968a2cccd967349d4"
+  },
+  "src/Bank.Api/Features/Transfers/IdempotentTransfer/IdempotentTransferEndpoint.cs": {
+    "mtime": 1788406898.226155,
+    "ast_hash": "b5d93bbb85dc2948042bf639cdc9d21a",
+    "semantic_hash": "b5d93bbb85dc2948042bf639cdc9d21a"
+  },
+  "src/Bank.Api/Features/Withdrawals/DistributedLockWithdraw/DistributedLockWithdrawHandler.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "e8397e4edb68688b8b7ae1881cd20b34",
+    "semantic_hash": "e8397e4edb68688b8b7ae1881cd20b34"
+  },
+  "src/Bank.Api/Features/Withdrawals/LockWithdraw/LockWithdrawHandler.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "751ecff3f5ef1248d3c20500049c84be",
+    "semantic_hash": "751ecff3f5ef1248d3c20500049c84be"
+  },
+  "src/Bank.Api/Features/Withdrawals/NaiveWithdraw/NaiveWithdrawHandler.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "b1b4b6421f6dbf4d9a5dcbbd724e5c63",
+    "semantic_hash": "b1b4b6421f6dbf4d9a5dcbbd724e5c63"
+  },
+  "src/Bank.Api/Features/Withdrawals/OptimisticWithdraw/OptimisticWithdrawHandler.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "3541ae824683cbc99ed968ee2b2393bd",
+    "semantic_hash": "3541ae824683cbc99ed968ee2b2393bd"
+  },
+  "src/Bank.Api/Features/Withdrawals/PessimisticWithdraw/PessimisticWithdrawHandler.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "5de5383da6c2250d2c9e991d2d1c48fb",
+    "semantic_hash": "5de5383da6c2250d2c9e991d2d1c48fb"
+  },
+  "src/Bank.Api/Program.cs": {
+    "mtime": 1788414333.6502068,
+    "ast_hash": "6bf44f40a127ca4e3054177dbec97bdc",
+    "semantic_hash": "6bf44f40a127ca4e3054177dbec97bdc"
+  },
+  "src/Bank.Api/Properties/launchSettings.json": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "f32b115d9f39e5b0defa9ec13039ec7b",
+    "semantic_hash": "f32b115d9f39e5b0defa9ec13039ec7b"
+  },
+  "src/Bank.Api/Shared/Contention/ContentionEvent.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "03e2d4a729cf7f406dea6de4478741b5",
+    "semantic_hash": "03e2d4a729cf7f406dea6de4478741b5"
+  },
+  "src/Bank.Api/Shared/Contention/ContentionRecorder.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "d7574b66f65bfc3f4033cc4841ebdae9",
+    "semantic_hash": "d7574b66f65bfc3f4033cc4841ebdae9"
+  },
+  "src/Bank.Api/Shared/Contention/ContentionRecorderExtensions.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "86690142600a4eb4d7adf053adc4b8b7",
+    "semantic_hash": "86690142600a4eb4d7adf053adc4b8b7"
+  },
+  "src/Bank.Api/Shared/Contention/IContentionRecorder.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "368e0dd43052847cd99d605bf1f340e6",
+    "semantic_hash": "368e0dd43052847cd99d605bf1f340e6"
+  },
+  "src/Bank.Api/Shared/Contention/RunSummary.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "8f58db238403edad9f74039517fe1f25",
+    "semantic_hash": "8f58db238403edad9f74039517fe1f25"
+  },
+  "src/Bank.Api/Shared/Contention/RunSummaryCalculator.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "ec5d31c157d6f76e35b53c9daa82f5f6",
+    "semantic_hash": "ec5d31c157d6f76e35b53c9daa82f5f6"
+  },
+  "src/Bank.Api/Shared/Endpoints/EndpointExtensions.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "5e5b0e4315bbde829fcfa76a54600c5b",
+    "semantic_hash": "5e5b0e4315bbde829fcfa76a54600c5b"
+  },
+  "src/Bank.Api/Shared/Endpoints/IEndpoint.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "fefcba4066962c8c3782dd872d167b97",
+    "semantic_hash": "fefcba4066962c8c3782dd872d167b97"
+  },
+  "src/Bank.Api/Shared/Interleaving/AsyncBarrier.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "c2ad5e84a05c346dbfd56ad3d2e4964c",
+    "semantic_hash": "c2ad5e84a05c346dbfd56ad3d2e4964c"
+  },
+  "src/Bank.Api/Shared/Interleaving/IInterleaveGate.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "70cde85ce1eb11dfee2f7d8ed3d4e26c",
+    "semantic_hash": "70cde85ce1eb11dfee2f7d8ed3d4e26c"
+  },
+  "src/Bank.Api/Shared/Interleaving/LabInterleaveGate.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "6f7f9deec4ce52f8711e316cdea25975",
+    "semantic_hash": "6f7f9deec4ce52f8711e316cdea25975"
+  },
+  "src/Bank.Api/Shared/Locking/IAccountLock.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "5375b89ffcc40dc30092f0d4c2c2220d",
+    "semantic_hash": "5375b89ffcc40dc30092f0d4c2c2220d"
+  },
+  "src/Bank.Api/Shared/Locking/InProcessAccountLock.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "4a1e7a49bb82790668d8e34749e09d11",
+    "semantic_hash": "4a1e7a49bb82790668d8e34749e09d11"
+  },
+  "src/Bank.Api/Shared/Locking/PostgresAdvisoryAccountLock.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "7afdbb80e22a4205e40be93b74869a75",
+    "semantic_hash": "7afdbb80e22a4205e40be93b74869a75"
+  },
+  "src/Bank.Api/Shared/Persistence/Account.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "5760563fcafd2233bff750f019d1f43d",
+    "semantic_hash": "5760563fcafd2233bff750f019d1f43d"
+  },
+  "src/Bank.Api/Shared/Persistence/BankDbContext.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "3d6e8cf668770900c2a664c842aa9abc",
+    "semantic_hash": "3d6e8cf668770900c2a664c842aa9abc"
+  },
+  "src/Bank.Api/Shared/Persistence/IdempotencyRecord.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "f623bf32bacd70fc17141a6324c8fce2",
+    "semantic_hash": "f623bf32bacd70fc17141a6324c8fce2"
+  },
+  "src/Bank.Api/Shared/Persistence/InMemoryAccountStore.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "d497badb91184831a4ee2c47f61ea622",
+    "semantic_hash": "d497badb91184831a4ee2c47f61ea622"
+  },
+  "src/Bank.Api/Shared/Persistence/Migrations/20260830195227_InitialAccounts.Designer.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "e08f68dfb3c201ae5f845e7501d35418",
+    "semantic_hash": "e08f68dfb3c201ae5f845e7501d35418"
+  },
+  "src/Bank.Api/Shared/Persistence/Migrations/20260830195227_InitialAccounts.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "7782683e5cc6ec292a831289c0442173",
+    "semantic_hash": "7782683e5cc6ec292a831289c0442173"
+  },
+  "src/Bank.Api/Shared/Persistence/Migrations/20260830204909_AddIdempotencyRecords.Designer.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "33567619083a8e7a162a592886375de8",
+    "semantic_hash": "33567619083a8e7a162a592886375de8"
+  },
+  "src/Bank.Api/Shared/Persistence/Migrations/20260830204909_AddIdempotencyRecords.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "c78cd58977a8f12450534067cfa05bf3",
+    "semantic_hash": "c78cd58977a8f12450534067cfa05bf3"
+  },
+  "src/Bank.Api/Shared/Persistence/Migrations/BankDbContextModelSnapshot.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "f9bb636520b4d1f864bc27ea86376170",
+    "semantic_hash": "f9bb636520b4d1f864bc27ea86376170"
+  },
+  "src/Bank.Api/Shared/Withdrawals/WithdrawContracts.cs": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "792211d6bb2bda68d56c1e1e29832d89",
+    "semantic_hash": "792211d6bb2bda68d56c1e1e29832d89"
+  },
+  "src/Bank.Api/appsettings.Development.json": {
+    "mtime": 1788406898.2282557,
+    "ast_hash": "804b473502a4c415cf75db61c56c32aa",
+    "semantic_hash": "804b473502a4c415cf75db61c56c32aa"
+  },
+  "src/Bank.Api/appsettings.json": {
+    "mtime": 1788413853.0743115,
+    "ast_hash": "a8b40c36b7114d36b93611d5cf38a6b9",
+    "semantic_hash": "a8b40c36b7114d36b93611d5cf38a6b9"
+  },
+  "src/Bank.Benchmarks/Bank.Benchmarks.csproj": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "740c5ad595b0996deb02076847f3629c",
+    "semantic_hash": "740c5ad595b0996deb02076847f3629c"
+  },
+  "src/Bank.Benchmarks/Benchmarks/AggregationBenchmarks.cs": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "efdea6e5772e5bcff6f544ae504b2dda",
+    "semantic_hash": "efdea6e5772e5bcff6f544ae504b2dda"
+  },
+  "src/Bank.Benchmarks/Benchmarks/AsyncOverheadBenchmarks.cs": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "c09f50cb3e8a123b5225f7ab9f50d194",
+    "semantic_hash": "c09f50cb3e8a123b5225f7ab9f50d194"
+  },
+  "src/Bank.Benchmarks/Benchmarks/SynchronizationBenchmarks.cs": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "18869f235376fe763b4296e5213962c1",
+    "semantic_hash": "18869f235376fe763b4296e5213962c1"
+  },
+  "src/Bank.Benchmarks/Program.cs": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "ced1ea3c864f9c183e598e1c1ccb2eaf",
+    "semantic_hash": "ced1ea3c864f9c183e598e1c1ccb2eaf"
+  },
+  "tests/Bank.Api.IntegrationTests/Bank.Api.IntegrationTests.csproj": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "2e29f52d086b314b8e6a717921931944",
+    "semantic_hash": "2e29f52d086b314b8e6a717921931944"
+  },
+  "tests/Bank.Api.IntegrationTests/Features/Transfers/DeadlockTransferTests.cs": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "93181d439a9f99d628a2f2cd3c96c4b0",
+    "semantic_hash": "93181d439a9f99d628a2f2cd3c96c4b0"
+  },
+  "tests/Bank.Api.IntegrationTests/Features/Transfers/IdempotencyTests.cs": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "e36896e66cad0bdee4747fa82be737bc",
+    "semantic_hash": "e36896e66cad0bdee4747fa82be737bc"
+  },
+  "tests/Bank.Api.IntegrationTests/Features/Withdrawals/DistributedLockWithdrawTests.cs": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "eae8fb7822dffa45416ebb3870fee52c",
+    "semantic_hash": "eae8fb7822dffa45416ebb3870fee52c"
+  },
+  "tests/Bank.Api.IntegrationTests/Features/Withdrawals/OptimisticWithdrawTests.cs": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "4751332e1381ae109fb472e080e92637",
+    "semantic_hash": "4751332e1381ae109fb472e080e92637"
+  },
+  "tests/Bank.Api.IntegrationTests/Features/Withdrawals/PessimisticWithdrawTests.cs": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "27d24c28b009bff58ec439eb8f1962b8",
+    "semantic_hash": "27d24c28b009bff58ec439eb8f1962b8"
+  },
+  "tests/Bank.Api.IntegrationTests/FoundationTests.cs": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "3d2bfcda6ada4831ff3530a23e50ea16",
+    "semantic_hash": "3d2bfcda6ada4831ff3530a23e50ea16"
+  },
+  "tests/Bank.Api.IntegrationTests/GlobalUsings.cs": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "5a6674b5690f598af47ff55d055e5524",
+    "semantic_hash": "5a6674b5690f598af47ff55d055e5524"
+  },
+  "tests/Bank.Api.IntegrationTests/Infrastructure/PostgresFixture.cs": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "9f1689ea5b5c2345cb0b9a0a81cbdbaa",
+    "semantic_hash": "9f1689ea5b5c2345cb0b9a0a81cbdbaa"
+  },
+  "tests/Bank.Api.IntegrationTests/Infrastructure/PostgresLabHarness.cs": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "1dfa4d4c144a07fd0b34d7eb1edf851c",
+    "semantic_hash": "1dfa4d4c144a07fd0b34d7eb1edf851c"
+  },
+  "tests/Bank.Api.UnitTests/Bank.Api.UnitTests.csproj": {
+    "mtime": 1788406898.2354724,
+    "ast_hash": "3a6ce7df0754e375f7cf2db02798c058",
+    "semantic_hash": "3a6ce7df0754e375f7cf2db02798c058"
+  },
+  "tests/Bank.Api.UnitTests/Features/Fraud/FraudFanOutTests.cs": {
+    "mtime": 1788406898.2388353,
+    "ast_hash": "dc7d5ccc76770ea071c962922cb05906",
+    "semantic_hash": "dc7d5ccc76770ea071c962922cb05906"
+  },
+  "tests/Bank.Api.UnitTests/Features/Interest/InterestStrategiesTests.cs": {
+    "mtime": 1788406898.2388353,
+    "ast_hash": "50d48778f69ee10acd6856ecf15170f0",
+    "semantic_hash": "50d48778f69ee10acd6856ecf15170f0"
+  },
+  "tests/Bank.Api.UnitTests/Features/Withdrawals/InvariantSuiteHasTeethTests.cs": {
+    "mtime": 1788406898.2388353,
+    "ast_hash": "6643c7e328145a1a3171d76750d62924",
+    "semantic_hash": "6643c7e328145a1a3171d76750d62924"
+  },
+  "tests/Bank.Api.UnitTests/Features/Withdrawals/LockWithdrawTests.cs": {
+    "mtime": 1788406898.2388353,
+    "ast_hash": "9554d39b58936e99185bc3effe2f4bfe",
+    "semantic_hash": "9554d39b58936e99185bc3effe2f4bfe"
+  },
+  "tests/Bank.Api.UnitTests/Features/Withdrawals/NaiveWithdrawTests.cs": {
+    "mtime": 1788406898.2388353,
+    "ast_hash": "e60bfa3e92c6e8f1ef37441754218e93",
+    "semantic_hash": "e60bfa3e92c6e8f1ef37441754218e93"
+  },
+  "tests/Bank.Api.UnitTests/GlobalUsings.cs": {
+    "mtime": 1788406898.2388353,
+    "ast_hash": "5a6674b5690f598af47ff55d055e5524",
+    "semantic_hash": "5a6674b5690f598af47ff55d055e5524"
+  },
+  "tests/Bank.Api.UnitTests/Infrastructure/LabHarness.cs": {
+    "mtime": 1788406898.2388353,
+    "ast_hash": "d065df9e0465a4b5d97488acdd44c218",
+    "semantic_hash": "d065df9e0465a4b5d97488acdd44c218"
+  },
+  "tests/Bank.Api.UnitTests/Infrastructure/TimingSensitiveCollection.cs": {
+    "mtime": 1788406898.2388353,
+    "ast_hash": "8aaff1e4c66c512689b89244bdfe7708",
+    "semantic_hash": "8aaff1e4c66c512689b89244bdfe7708"
+  },
+  "tests/Bank.LoadTests/Bank.LoadTests.csproj": {
+    "mtime": 1788406898.2388353,
+    "ast_hash": "7bbe49fb81a7b393c59e51b55c5f9faa",
+    "semantic_hash": "7bbe49fb81a7b393c59e51b55c5f9faa"
+  },
+  "tests/Bank.LoadTests/Harness/LoadHarness.cs": {
+    "mtime": 1788406898.2388353,
+    "ast_hash": "14bea82cf54f5b27a502324d8a51bee6",
+    "semantic_hash": "14bea82cf54f5b27a502324d8a51bee6"
+  },
+  "tests/Bank.LoadTests/Program.cs": {
+    "mtime": 1788406898.2388353,
+    "ast_hash": "3a6958b6c62cc95e7a6c4d14216795a9",
+    "semantic_hash": "3a6958b6c62cc95e7a6c4d14216795a9"
+  },
+  "ui/bank-lab-ui/.vscode/extensions.json": {
+    "mtime": 1788406898.2388353,
+    "ast_hash": "66fd9e60d4633b6099fe02e06a7075ea",
+    "semantic_hash": "66fd9e60d4633b6099fe02e06a7075ea"
+  },
+  "ui/bank-lab-ui/.vscode/launch.json": {
+    "mtime": 1788406898.2388353,
+    "ast_hash": "430386a2f03e9d559664c196344c121b",
+    "semantic_hash": "430386a2f03e9d559664c196344c121b"
+  },
+  "ui/bank-lab-ui/.vscode/tasks.json": {
+    "mtime": 1788406898.2388353,
+    "ast_hash": "d2fc2624d783980be281b4cf0acc2455",
+    "semantic_hash": "d2fc2624d783980be281b4cf0acc2455"
+  },
+  "ui/bank-lab-ui/angular.json": {
+    "mtime": 1788414038.1145346,
+    "ast_hash": "821c6b49bde87a607639f8a49a163beb",
+    "semantic_hash": "821c6b49bde87a607639f8a49a163beb"
+  },
+  "ui/bank-lab-ui/package.json": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "86e9741c573de2400adf40c7cb2dcb94",
+    "semantic_hash": "86e9741c573de2400adf40c7cb2dcb94"
+  },
+  "ui/bank-lab-ui/src/app/app.component.ts": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "062a501d66e22607035b5ae14ca6de4c",
+    "semantic_hash": "062a501d66e22607035b5ae14ca6de4c"
+  },
+  "ui/bank-lab-ui/src/app/app.config.ts": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "f4a1c8d59388c28fa19444cbd70f0bba",
+    "semantic_hash": "f4a1c8d59388c28fa19444cbd70f0bba"
+  },
+  "ui/bank-lab-ui/src/app/app.routes.ts": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "e492e5feeddd29c576120d674e1fa306",
+    "semantic_hash": "e492e5feeddd29c576120d674e1fa306"
+  },
+  "ui/bank-lab-ui/src/app/core/contention-hub.service.ts": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "20abfdfadf1d17893eabe2c8fde36cbe",
+    "semantic_hash": "20abfdfadf1d17893eabe2c8fde36cbe"
+  },
+  "ui/bank-lab-ui/src/app/core/lab-api.service.ts": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "62e424f51cb01f02c2c8ea61bcf9227d",
+    "semantic_hash": "62e424f51cb01f02c2c8ea61bcf9227d"
+  },
+  "ui/bank-lab-ui/src/app/core/models.ts": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "6f000682fed1e6095b027193fc1d78cb",
+    "semantic_hash": "6f000682fed1e6095b027193fc1d78cb"
+  },
+  "ui/bank-lab-ui/src/app/pages/compare/compare.component.ts": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "116eaabbf38183595bf1ec14b4be69c5",
+    "semantic_hash": "116eaabbf38183595bf1ec14b4be69c5"
+  },
+  "ui/bank-lab-ui/src/app/pages/home/home.component.ts": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "aac6ea39a0a41558ede9ac473a3da853",
+    "semantic_hash": "aac6ea39a0a41558ede9ac473a3da853"
+  },
+  "ui/bank-lab-ui/src/app/pages/learn/learn.component.ts": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "b401d27985492a8936dd3c977f534ad7",
+    "semantic_hash": "b401d27985492a8936dd3c977f534ad7"
+  },
+  "ui/bank-lab-ui/src/app/pages/parallelism/parallelism.component.ts": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "68b64fc937d29ccb539601b98d4ebd08",
+    "semantic_hash": "68b64fc937d29ccb539601b98d4ebd08"
+  },
+  "ui/bank-lab-ui/src/app/pages/race-lab/race-lab.component.ts": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "71ea2c64617362c29caacc03e925db87",
+    "semantic_hash": "71ea2c64617362c29caacc03e925db87"
+  },
+  "ui/bank-lab-ui/src/app/pages/scale/scale.component.ts": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "fec368d0cd8ed5a4935165b600b2d063",
+    "semantic_hash": "fec368d0cd8ed5a4935165b600b2d063"
+  },
+  "ui/bank-lab-ui/src/main.ts": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "b5c1d106e573fea21ef1ad9e4360e77a",
+    "semantic_hash": "b5c1d106e573fea21ef1ad9e4360e77a"
+  },
+  "ui/bank-lab-ui/tsconfig.app.json": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "8d99fdcdf658986569ea23b33df685a6",
+    "semantic_hash": "8d99fdcdf658986569ea23b33df685a6"
+  },
+  "ui/bank-lab-ui/tsconfig.json": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "dd3c8905847764e8a227c8bbb23ffab6",
+    "semantic_hash": "dd3c8905847764e8a227c8bbb23ffab6"
+  },
+  "ui/bank-lab-ui/tsconfig.spec.json": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "fde196cef563197a78958ceaea284638",
+    "semantic_hash": "fde196cef563197a78958ceaea284638"
+  },
+  ".claude/agents/concurrency-reviewer.md": {
+    "mtime": 1788406898.2007396,
+    "ast_hash": "9d559b5b91d97e766ab768a2c079785f",
+    "semantic_hash": "9d559b5b91d97e766ab768a2c079785f"
+  },
+  ".claude/commands/adr.md": {
+    "mtime": 1788406898.2007396,
+    "ast_hash": "62deb3aa6d3a4275601ef35ad46d7e00",
+    "semantic_hash": "62deb3aa6d3a4275601ef35ad46d7e00"
+  },
+  ".claude/commands/lab.md": {
+    "mtime": 1788406898.2007396,
+    "ast_hash": "5f63ce39b30e350964cbc0c07dd538bd",
+    "semantic_hash": "5f63ce39b30e350964cbc0c07dd538bd"
+  },
+  ".claude/commands/measure.md": {
+    "mtime": 1788406898.2007396,
+    "ast_hash": "fb756d4de41243182d04e8ec1612ea46",
+    "semantic_hash": "fb756d4de41243182d04e8ec1612ea46"
+  },
+  ".claude/rules/angular-ui.md": {
+    "mtime": 1788406898.207424,
+    "ast_hash": "ece8419bce3ec79cae0e3190fddde56f",
+    "semantic_hash": "ece8419bce3ec79cae0e3190fddde56f"
+  },
+  ".claude/rules/concurrency-slices.md": {
+    "mtime": 1788406898.207424,
+    "ast_hash": "337ad2f07375e9021ad684bdc671e2fa",
+    "semantic_hash": "337ad2f07375e9021ad684bdc671e2fa"
+  },
+  ".claude/rules/docs-and-adrs.md": {
+    "mtime": 1788406898.207424,
+    "ast_hash": "a81f454ac3e417867252534c31b53f54",
+    "semantic_hash": "a81f454ac3e417867252534c31b53f54"
+  },
+  ".claude/rules/testing.md": {
+    "mtime": 1788406898.207424,
+    "ast_hash": "c3bc5ce6d18ce64d0f57751b1ee3c3f3",
+    "semantic_hash": "c3bc5ce6d18ce64d0f57751b1ee3c3f3"
+  },
+  ".claude/skills/add-slice/SKILL.md": {
+    "mtime": 1788406898.207424,
+    "ast_hash": "ddf0fa446e934349bf0790dc4e69930c",
+    "semantic_hash": "ddf0fa446e934349bf0790dc4e69930c"
+  },
+  ".claude/skills/add-slice/slice-template.md": {
+    "mtime": 1788406898.207424,
+    "ast_hash": "1aad934a5eadee40772d86dc70eb0d70",
+    "semantic_hash": "1aad934a5eadee40772d86dc70eb0d70"
+  },
+  ".github/workflows/ci.yml": {
+    "mtime": 1788406898.2093847,
+    "ast_hash": "51f2835d35da4e6e0d1f4f52e519d9f5",
+    "semantic_hash": "51f2835d35da4e6e0d1f4f52e519d9f5"
+  },
+  ".serena/project.local.yml": {
+    "mtime": 1788407017.493807,
+    "ast_hash": "80d87878a5dcaa57ac055afdac265ad1",
+    "semantic_hash": "80d87878a5dcaa57ac055afdac265ad1"
+  },
+  ".serena/project.yml": {
+    "mtime": 1788407017.8150198,
+    "ast_hash": "6d7f37b7a63c3952ec89546337329c2b",
+    "semantic_hash": "6d7f37b7a63c3952ec89546337329c2b"
+  },
+  "CLAUDE.md": {
+    "mtime": 1788406898.2093847,
+    "ast_hash": "9a4fbdcae61b2484883dec42aaa53c57",
+    "semantic_hash": "9a4fbdcae61b2484883dec42aaa53c57"
+  },
+  "README.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "ba1056d90788879169fbc9e0e72c7e1d",
+    "semantic_hash": "ba1056d90788879169fbc9e0e72c7e1d"
+  },
+  "deploy/docker-compose.scale.yml": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "1ee30564a8edb8cd7bcc6e89dc8a14b0",
+    "semantic_hash": "1ee30564a8edb8cd7bcc6e89dc8a14b0"
+  },
+  "deploy/docker-compose.yml": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "e4580a1ea22847f83f2bd468f988b3fe",
+    "semantic_hash": "e4580a1ea22847f83f2bd468f988b3fe"
+  },
+  "docs/PLAN.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "b881c4d6f0abc1b6281807b475b85a64",
+    "semantic_hash": "b881c4d6f0abc1b6281807b475b85a64"
+  },
+  "docs/architecture/README.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "e1415d3068e0e9a770840384489c9d89",
+    "semantic_hash": "e1415d3068e0e9a770840384489c9d89"
+  },
+  "docs/architecture/adr/0001-vertical-slice-architecture.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "75ceecf23ad40a3eb9643f254265d90d",
+    "semantic_hash": "75ceecf23ad40a3eb9643f254265d90d"
+  },
+  "docs/architecture/adr/0002-no-mediatr.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "d608030a65cc46b413017d8fe3272b3d",
+    "semantic_hash": "d608030a65cc46b413017d8fe3272b3d"
+  },
+  "docs/architecture/adr/0003-target-dotnet-8-lts.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "36eb4fe7cb16e336971f63b1c9c249b4",
+    "semantic_hash": "36eb4fe7cb16e336971f63b1c9c249b4"
+  },
+  "docs/architecture/adr/0004-hybrid-persistence.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "89e6b256aeed00cd6a766c11eb0ee29f",
+    "semantic_hash": "89e6b256aeed00cd6a766c11eb0ee29f"
+  },
+  "docs/architecture/adr/0005-postgresql-over-sqlserver-sqlite.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "7dc266b2a3ffdfa58e6347ed8b7b7018",
+    "semantic_hash": "7dc266b2a3ffdfa58e6347ed8b7b7018"
+  },
+  "docs/architecture/adr/0007-optimistic-by-default.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "46b2749b205b8f759ceaec8d46e948fc",
+    "semantic_hash": "46b2749b205b8f759ceaec8d46e948fc"
+  },
+  "docs/architecture/adr/0008-interleave-gate-in-production-code.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "f65636d9c4f38b525d0a0d88fa3ace19",
+    "semantic_hash": "f65636d9c4f38b525d0a0d88fa3ace19"
+  },
+  "docs/architecture/adr/0009-signalr-for-live-timeline.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "e93971a042d09293119fb4b5f3c404d5",
+    "semantic_hash": "e93971a042d09293119fb4b5f3c404d5"
+  },
+  "docs/architecture/adr/0010-three-perf-tools.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "6b13ead3e659532a7cb974f04667d7c8",
+    "semantic_hash": "6b13ead3e659532a7cb974f04667d7c8"
+  },
+  "docs/architecture/adr/0011-angular-signals-no-ngrx.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "89a7849d827cf96afab612677379d1bc",
+    "semantic_hash": "89a7849d827cf96afab612677379d1bc"
+  },
+  "docs/architecture/adr/0012-postgres-advisory-locks.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "23e46ac5cc30411fcad4686b4ff9dc29",
+    "semantic_hash": "23e46ac5cc30411fcad4686b4ff9dc29"
+  },
+  "docs/architecture/adr/0013-in-memory-ring-buffer.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "b3af6f36fd5fb4d8829ee53fbdc92ff2",
+    "semantic_hash": "b3af6f36fd5fb4d8829ee53fbdc92ff2"
+  },
+  "docs/architecture/adr/0014-compose-not-kubernetes.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "39871705e97f195b76f1414a9c78d061",
+    "semantic_hash": "39871705e97f195b76f1414a9c78d061"
+  },
+  "docs/architecture/adr/0015-local-postgres-over-testcontainers.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "74e5c522aef3c43ab8166ec400b00a8f",
+    "semantic_hash": "74e5c522aef3c43ab8166ec400b00a8f"
+  },
+  "docs/architecture/adr/0016-three-tier-test-strategy.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "bcc0cf8d81ad6dc265a09797db089e6a",
+    "semantic_hash": "bcc0cf8d81ad6dc265a09797db089e6a"
+  },
+  "docs/architecture/system-overview.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "eaffc0578d0ba9cb9dad52c34d565dac",
+    "semantic_hash": "eaffc0578d0ba9cb9dad52c34d565dac"
+  },
+  "docs/architecture/trade-off-matrix.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "8a47ff443b91b4ad8feffe5b5aeeca04",
+    "semantic_hash": "8a47ff443b91b4ad8feffe5b5aeeca04"
+  },
+  "docs/benchmarks/Bank.Benchmarks.Benchmarks.AggregationBenchmarks-report-github.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "060ac3846d524e0280fc85e55a721c18",
+    "semantic_hash": "060ac3846d524e0280fc85e55a721c18"
+  },
+  "docs/benchmarks/Bank.Benchmarks.Benchmarks.AsyncOverheadBenchmarks-report-github.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "007ba0c5d5478afc9f7a6ee92fa59ad1",
+    "semantic_hash": "007ba0c5d5478afc9f7a6ee92fa59ad1"
+  },
+  "docs/benchmarks/Bank.Benchmarks.Benchmarks.SynchronizationBenchmarks-report-github.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "47bcba8285d0fe8918464df308495938",
+    "semantic_hash": "47bcba8285d0fe8918464df308495938"
+  },
+  "docs/benchmarks/README.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "694dd299daea44c4727a7d7c55fc0b92",
+    "semantic_hash": "694dd299daea44c4727a7d7c55fc0b92"
+  },
+  "docs/lessons/00-mental-model.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "1567bfcfe5f6604d5b7e77c3b0acbdd7",
+    "semantic_hash": "1567bfcfe5f6604d5b7e77c3b0acbdd7"
+  },
+  "docs/lessons/01-race-conditions.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "9c5476a41dce747884fce85b87588190",
+    "semantic_hash": "9c5476a41dce747884fce85b87588190"
+  },
+  "docs/lessons/02-in-process-locking.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "b6e12bda35a39a625d113f09893f343b",
+    "semantic_hash": "b6e12bda35a39a625d113f09893f343b"
+  },
+  "docs/lessons/03-optimistic-concurrency.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "f5b49f9bd31f56ecc60029c8e900391e",
+    "semantic_hash": "f5b49f9bd31f56ecc60029c8e900391e"
+  },
+  "docs/lessons/04-pessimistic-concurrency.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "19f3a144b4247ee36c5d040ca7fac3bf",
+    "semantic_hash": "19f3a144b4247ee36c5d040ca7fac3bf"
+  },
+  "docs/lessons/05-choosing-between-them.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "2e11d8e96a6dd7e81383e5ed5fe0e978",
+    "semantic_hash": "2e11d8e96a6dd7e81383e5ed5fe0e978"
+  },
+  "docs/lessons/06-deadlocks.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "f1bdc5d251f7071cbabc1d2e5c8c1a85",
+    "semantic_hash": "f1bdc5d251f7071cbabc1d2e5c8c1a85"
+  },
+  "docs/lessons/07-parallelism-cpu-bound.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "0374704062ba19e4ba22d547596acb6d",
+    "semantic_hash": "0374704062ba19e4ba22d547596acb6d"
+  },
+  "docs/lessons/08-async-io-bound.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "3035f17321d3610f800492e42a6cf504",
+    "semantic_hash": "3035f17321d3610f800492e42a6cf504"
+  },
+  "docs/lessons/09-scaling.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "fdb613f0e2b7f6528f7c72e903818585",
+    "semantic_hash": "fdb613f0e2b7f6528f7c72e903818585"
+  },
+  "docs/lessons/10-benchmarking-vs-load-testing.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "52707b51fc60fc3b64faf23dd8fbf570",
+    "semantic_hash": "52707b51fc60fc3b64faf23dd8fbf570"
+  },
+  "docs/lessons/11-interview-questions.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "8296bff305dd3fe876e29818cf3b2114",
+    "semantic_hash": "8296bff305dd3fe876e29818cf3b2114"
+  },
+  "docs/lessons/README.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "ddbc79a1992ab357ec1c3000c7a1ca36",
+    "semantic_hash": "ddbc79a1992ab357ec1c3000c7a1ca36"
+  },
+  "loadtests/k6/README.md": {
+    "mtime": 1788406898.211398,
+    "ast_hash": "070384f85baf8dc394fe6ad708ec86a2",
+    "semantic_hash": "070384f85baf8dc394fe6ad708ec86a2"
+  },
+  "ui/bank-lab-ui/README.md": {
+    "mtime": 1788406898.2388353,
+    "ast_hash": "8e68b2881a6e656b56a952244694f558",
+    "semantic_hash": "8e68b2881a6e656b56a952244694f558"
+  },
+  "ui/bank-lab-ui/src/app/app.component.html": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "36895f26b86903607aa67d8e01c8e940",
+    "semantic_hash": "36895f26b86903607aa67d8e01c8e940"
+  },
+  "ui/bank-lab-ui/src/app/pages/compare/compare.component.html": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "114de8a8fbbd96dd8246964080ff1273",
+    "semantic_hash": "114de8a8fbbd96dd8246964080ff1273"
+  },
+  "ui/bank-lab-ui/src/app/pages/home/home.component.html": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "6e2a7d9ee98a9d942deb38cac65af0cb",
+    "semantic_hash": "6e2a7d9ee98a9d942deb38cac65af0cb"
+  },
+  "ui/bank-lab-ui/src/app/pages/learn/learn.component.html": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "a94e04c56925dc02358ef5fe64466725",
+    "semantic_hash": "a94e04c56925dc02358ef5fe64466725"
+  },
+  "ui/bank-lab-ui/src/app/pages/parallelism/parallelism.component.html": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "f21132a66e7e0183fef5d835ed9b41a0",
+    "semantic_hash": "f21132a66e7e0183fef5d835ed9b41a0"
+  },
+  "ui/bank-lab-ui/src/app/pages/race-lab/race-lab.component.html": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "deb4d359b949ee7d525bc8ab0e27a16a",
+    "semantic_hash": "deb4d359b949ee7d525bc8ab0e27a16a"
+  },
+  "ui/bank-lab-ui/src/app/pages/scale/scale.component.html": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "d204ac16acd9b25a9ebcc3598491fd17",
+    "semantic_hash": "d204ac16acd9b25a9ebcc3598491fd17"
+  },
+  "ui/bank-lab-ui/src/index.html": {
+    "mtime": 1788406898.2446983,
+    "ast_hash": "b6383b55cedd1ab6f248ff543f811576",
+    "semantic_hash": "b6383b55cedd1ab6f248ff543f811576"
+  }
+}
